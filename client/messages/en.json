@@ -1,0 +1,21 @@
+{
+  "Index": {
+    "badge": "Architecting the Future",
+    "title_main": "Future-Proof Your",
+    "title_highlight": "Digital Presence",
+    "description": "Smart Digital Solutions & High-Performance Platforms",
+    "cta_primary": "Explore Solutions",
+    "cta_secondary": "View Portfolio",
+    "vision_title": "Digital Heartbeat",
+    "vision_label": "Live Performance Matrix",
+    "vision_stat_1": "Global Reach",
+    "vision_stat_2": "Secure Core",
+    "vision_stat_3": "Future Ready"
+  },
+  "Navigation": {
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "saas": "SaaS Products",
+    "blog": "Blog"
+  }
+}

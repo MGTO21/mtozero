@@ -1,0 +1,26 @@
+# API
+api/node_modules
+api/vendor
+api/.env
+api/.env.*
+api/public/storage
+api/storage/*.key
+api/storage/pail
+api/.phpunit.cache
+api/.vscode
+api/.idea
+
+# Client
+client/node_modules
+client/.next
+client/out
+client/build
+client/.env*.local
+client/.vercel
+client/*.tsbuildinfo
+client/next-env.d.ts
+
+# Root
+.DS_Store
+Thumbs.db
+*.log
