@@ -35,7 +35,7 @@ export function SaasDetailContent({
 
   const rawFeatures = product.features?.[locale] || product.features?.['en'];
   const features: { item: string }[] = Array.isArray(rawFeatures) 
-    ? rawFeatures.map((f: any) => typeof f === 'string' ? { item: f } : f)
+    ? rawFeatures.map((f: string | { item: string }) => typeof f === 'string' ? { item: f } : f)
     : (typeof rawFeatures === 'string' 
         ? rawFeatures.split('\n').filter(Boolean).map((f: string) => ({ item: f.trim() })) 
         : []);
