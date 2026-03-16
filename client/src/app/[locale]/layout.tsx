@@ -144,9 +144,21 @@ export default async function RootLayout({
               <Header locale={locale} />
               <main className="flex-1 relative">
                 {/* Background Ambience applied globally */}
-                <div className="absolute inset-x-0 inset-y-0 z-[-1] bg-background pointer-events-none overflow-hidden">
+                <div className="absolute inset-x-0 inset-y-0 z-[-1] bg-background pointer-events-none overflow-hidden select-none">
+                  {/* Glowing Orbs */}
                   <div className="absolute top-0 right-0 w-[50vw] h-[50vw] rounded-full bg-mtozero-cyan/5 blur-[120px] dark:bg-mtozero-cyan/10 translate-x-1/2 -translate-y-1/2"></div>
                   <div className="absolute bottom-0 left-0 w-[60vw] h-[60vw] rounded-full bg-mtozero-purple/5 blur-[120px] dark:bg-mtozero-purple/10 -translate-x-1/2 translate-y-1/2"></div>
+                  
+                  {/* Branding Watermarks { } */}
+                  <div className={`absolute top-[15%] ${locale === 'ar' ? 'left-[5%]' : 'right-[5%]'} text-[20rem] font-black text-foreground/[0.03] rotate-12 pointer-events-none hidden lg:block`}>
+                    {"{"}
+                  </div>
+                  <div className={`absolute bottom-[10%] ${locale === 'ar' ? 'right-[10%]' : 'left-[10%]'} text-[25rem] font-black text-foreground/[0.02] -rotate-12 pointer-events-none hidden lg:block`}>
+                    {"}"}
+                  </div>
+                  
+                  {/* Subtle Grid / Noise */}
+                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] brightness-100 contrast-150" />
                 </div>
                 {children}
               </main>

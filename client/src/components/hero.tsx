@@ -53,11 +53,39 @@ export function Hero() {
       <div className="container max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24 relative z-10 px-6">
         
         {/* --- LEFT CONTENT: BESPOKE TYPOGRAPHY --- */}
-        <div className="flex-1 text-center lg:text-start">
+        <div className="flex-1 text-center lg:text-start relative">
+          {/* Moved & Scaled Pulse Wave Behind Text */}
+          <div className="absolute -top-20 -left-20 w-[140%] h-[140%] pointer-events-none z-0 hidden lg:block opacity-40">
+            <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-[0_0_80px_rgba(0,240,255,0.1)]">
+              <motion.path
+                d="M 50 200 Q 150 100 200 200 T 350 200"
+                fill="none"
+                stroke="url(#heroWaveGrad)"
+                strokeWidth="0.8"
+                animate={{ 
+                  d: [
+                    "M 50 200 Q 150 100 200 200 T 350 200",
+                    "M 50 200 Q 150 300 200 200 T 350 200",
+                    "M 50 200 Q 150 100 200 200 T 350 200"
+                  ]
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <defs>
+                <linearGradient id="heroWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#00f0ff" stopOpacity="0" />
+                  <stop offset="50%" stopColor="#00f0ff" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10"
           >
             <span className="inline-flex items-center gap-3 py-2.5 px-6 mb-10 border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-mtozero-cyan text-[10px] md:text-[11px] rounded-full font-black uppercase tracking-[0.4em] shadow-xl backdrop-blur-xl ring-1 ring-black/5 dark:ring-white/5">
               <span className="relative flex h-2 w-2">
