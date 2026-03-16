@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ServiceSeeder::class,
             SocialLinkSeeder::class,
+            DemoDataSeeder::class,
         ]);
     }
 }
