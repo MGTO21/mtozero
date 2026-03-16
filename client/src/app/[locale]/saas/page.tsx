@@ -5,14 +5,6 @@ import { Metadata } from "next";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
-interface SaasProductType {
-  id: number;
-  slug: string;
-  name: Record<string, string>;
-  description: Record<string, string>;
-  pricing: Record<string, string> | null;
-}
-
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   return {
     title: locale === 'ar' ? `منصات ساس جاهزة | mtozero` : `Ready-to-Deploy SaaS | mtozero`,

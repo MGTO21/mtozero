@@ -6,16 +6,6 @@ import { Metadata } from "next";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 const STORAGE_URL = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://127.0.0.1:8000/storage';
 
-interface BlogPostType {
-  id: number;
-  slug: string;
-  title: Record<string, string>;
-  content: Record<string, string>;
-  image: string | null;
-  is_published: boolean;
-  created_at: string;
-}
-
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   return {
     title: locale === 'ar' ? `مدونة mtozero | مقالات تقنية` : `mtozero Blog | Tech Insights`,

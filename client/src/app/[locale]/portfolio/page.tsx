@@ -6,16 +6,8 @@ import { Metadata } from "next";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 const STORAGE_URL = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://127.0.0.1:8000/storage';
 
-interface PortfolioType {
-  id: number;
-  title: Record<string, string>;
-  description: Record<string, string>;
-  image: string | string[];
-  url?: string;
-}
-
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: 'SEO' });
+  await getTranslations({ locale, namespace: 'SEO' });
   
   return {
     title: locale === 'ar' ? `معرض أعمال محمد معتصم | mtozero` : `Mohammed Moatasim Portfolio | mtozero`,

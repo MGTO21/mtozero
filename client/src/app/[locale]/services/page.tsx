@@ -5,16 +5,8 @@ import { Metadata } from "next";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
-interface ServiceType {
-  id: number;
-  icon: string;
-  title: Record<string, string>;
-  description: Record<string, string>;
-  features?: Record<string, string[]>;
-}
-
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: 'SEO' });
+  await getTranslations({ locale, namespace: 'SEO' });
   
   return {
     title: locale === 'ar' ? `خدماتنا الرقمية | mtozero` : `Our Digital Services | mtozero`,
