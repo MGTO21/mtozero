@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Cairo } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { NextIntlClientProvider, useMessages } from "next-intl";
+import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -22,10 +22,60 @@ const cairo = Cairo({
   display: "swap" 
 });
 
-export const metadata: Metadata = {
-  title: "MTOZERO - Smart Digital Solutions",
-  description: "Next Generation Web Platform",
-};
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'SEO' });
+  const baseUrl = "https://mtozero.com";
+
+  return {
+    title: {
+      default: t('title'),
+      template: `%s | ${t('title')}`,
+    },
+    description: t('description'),
+    keywords: t('keywords'),
+    authors: [{ name: "Mohammed Moatasim", url: "https://github.com/MGTO21" }],
+    creator: "Mohammed Moatasim",
+    publisher: "MTOZERO",
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        'en-US': '/en',
+        'ar-SA': '/ar',
+      },
+    },
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: baseUrl,
+      siteName: "MTOZERO",
+      locale: locale === "ar" ? "ar_SA" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t('title'),
+      description: t('description'),
+      creator: "@mtozero",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -40,8 +90,30 @@ export default async function RootLayout({
     ? `font-arabic ${cairo.variable}` 
     : `font-sans ${outfit.variable}`;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "MTOZERO",
+    "url": "https://mtozero.com",
+    "logo": "https://mtozero.com/logo.jpeg",
+    "sameAs": [
+      "https://github.com/MGTO21",
+    ],
+    "founder": {
+      "@type": "Person",
+      "name": "Mohammed Moatasim",
+      "jobTitle": "Lead Software Developer"
+    }
+  };
+
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${fontClass} antialiased min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300 selection:bg-mtozero-purple selection:text-white`}>
         <NextTopLoader color="#00f0ff" showSpinner={false} />
         <NextIntlClientProvider messages={messages}>
