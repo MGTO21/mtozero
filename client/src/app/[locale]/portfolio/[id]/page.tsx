@@ -23,15 +23,20 @@ export async function generateMetadata({ params: { locale, id } }: { params: { l
   const title = project.title[locale] || project.title['en'] || 'Project Details';
   const description = project.description[locale] || project.description['en'];
 
+  let imageUrl = '/logo.jpeg';
+  if (Array.isArray(project.image) && project.image.length > 0) {
+    imageUrl = project.image[0].startsWith('http') ? project.image[0] : `${STORAGE_URL}/${project.image[0]}`;
+  } else if (typeof project.image === 'string') {
+    imageUrl = project.image.startsWith('http') ? project.image : `${STORAGE_URL}/${project.image}`;
+  }
+
   return {
     title: `${title} | mtozero Portfolio`,
     description: description.substring(0, 160),
     openGraph: {
       title: `${title} | Mohammed Moatasim Portfolio`,
       description: description,
-      images: Array.isArray(project.image) && project.image.length > 0 
-        ? [`${STORAGE_URL}/${project.image[0]}`] 
-        : project.image.startsWith('http') ? [project.image] : [`${STORAGE_URL}/${project.image}`],
+      images: [imageUrl],
     }
   };
 }

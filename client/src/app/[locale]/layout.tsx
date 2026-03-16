@@ -49,11 +49,27 @@ export async function generateMetadata({ params: { locale } }: { params: { local
         'ar-SA': '/ar',
       },
     },
+    verification: {
+      google: "1wlCGDL4si31kzIKh48hdTHTdOnx3B6v4qMDeMYT77A",
+    },
+    icons: {
+      icon: "/logo.jpeg",
+      shortcut: "/logo.jpeg",
+      apple: "/logo.jpeg",
+    },
     openGraph: {
       title: t('title'),
       description: t('description'),
       url: baseUrl,
       siteName: "MTOZERO",
+      images: [
+        {
+          url: "/logo.jpeg",
+          width: 800,
+          height: 800,
+          alt: "MTOZERO Logo",
+        },
+      ],
       locale: locale === "ar" ? "ar_SA" : "en_US",
       type: "website",
     },
@@ -61,6 +77,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
       card: "summary_large_image",
       title: t('title'),
       description: t('description'),
+      images: ["/logo.jpeg"],
       creator: "@mtozero",
     },
     robots: {
