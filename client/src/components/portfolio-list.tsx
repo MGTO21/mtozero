@@ -36,18 +36,31 @@ export function PortfolioList({
            href={`/${locale}/portfolio/${project.id}`}
            className="group block rounded-3xl overflow-hidden bg-card border border-border hover:border-mtozero-cyan/50 transition-all duration-500 shadow-lg hover:shadow-2xl h-full"
          >
-           <div className="relative w-full h-64 overflow-hidden bg-muted group">
-             {/* Full Cover Image */}
-             <Image 
-               src={Array.isArray(project.image) && project.image.length > 0 
-                       ? (project.image[0].startsWith('http') ? project.image[0] : `${storageUrl}/${project.image[0]}`)
-                       : (typeof project.image === 'string' && project.image.startsWith('http') ? project.image : `${storageUrl}/${project.image}`) || '/logo.jpeg'} 
-               alt={project.title[locale]} 
-               fill 
-               className="object-cover group-hover:scale-105 transition-transform duration-700" 
-               unoptimized
-               priority={index < 2}
-             />
+            <div className="relative w-full h-64 overflow-hidden bg-muted group flex items-center justify-center">
+              {/* Blurred Backdrop */}
+              <Image 
+                src={Array.isArray(project.image) && project.image.length > 0 
+                        ? (project.image[0].startsWith('http') ? project.image[0] : `${storageUrl}/${project.image[0]}`)
+                        : (typeof project.image === 'string' && project.image.startsWith('http') ? project.image : `${storageUrl}/${project.image}`) || '/logo.jpeg'} 
+                alt=""
+                fill 
+                className="object-cover blur-2xl opacity-40 scale-110" 
+                unoptimized
+              />
+
+              {/* Main Image (Contain) */}
+              <div className="relative w-full h-full p-4">
+                <Image 
+                  src={Array.isArray(project.image) && project.image.length > 0 
+                          ? (project.image[0].startsWith('http') ? project.image[0] : `${storageUrl}/${project.image[0]}`)
+                          : (typeof project.image === 'string' && project.image.startsWith('http') ? project.image : `${storageUrl}/${project.image}`) || '/logo.jpeg'} 
+                  alt={project.title[locale]} 
+                  fill 
+                  className="object-contain group-hover:scale-[1.02] transition-transform duration-700" 
+                  unoptimized
+                  priority={index < 2}
+                />
+              </div>
              
              {/* Overlay for abstract tech feel */}
              <div className="absolute inset-0 bg-gradient-to-br from-mtozero-cyan/10 to-mtozero-purple/10 opacity-60 group-hover:opacity-20 transition-opacity duration-700 mix-blend-overlay" />

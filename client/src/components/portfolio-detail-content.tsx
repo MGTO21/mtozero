@@ -74,16 +74,29 @@ export function PortfolioDetailContent({
           className="lg:col-span-7 space-y-6"
         >
           {/* Main Active Image Showcase */}
-          <div className="relative w-full aspect-video rounded-3xl overflow-hidden bg-muted border border-border shadow-2xl group">
+          <div className="relative w-full min-h-[400px] lg:min-h-[500px] aspect-[4/3] rounded-3xl overflow-hidden bg-muted border border-border shadow-2xl group flex items-center justify-center">
+            {/* Blurred Backdrop */}
             <Image 
               src={activeImage} 
-              alt={project.title[locale] || translations.untitled} 
+              alt="" 
               fill 
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              className="object-cover blur-3xl opacity-30 scale-110" 
               unoptimized
-              priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+            {/* Main Image (Contain) */}
+            <div className="relative w-full h-full p-4 sm:p-8">
+              <Image 
+                src={activeImage} 
+                alt={project.title[locale] || translations.untitled} 
+                fill 
+                className="object-contain transition-transform duration-700 group-hover:scale-[1.01]"
+                unoptimized
+                priority
+              />
+            </div>
+            
+            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
           </div>
 
           {/* Thumbnails Grid (Only show if multiple images exist) */}
