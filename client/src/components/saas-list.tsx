@@ -46,11 +46,11 @@ export function SaasList({
               </div>
               
               <h3 className="text-3xl font-bold mb-4 tracking-tight group-hover:text-mtozero-purple transition-colors duration-300">
-                {product.name[locale] || product.name['en']}
+                {product.name[locale] || product.name[locale === 'ar' ? 'en' : 'ar']}
               </h3>
               
               <p className="text-muted-foreground leading-relaxed text-lg mb-8 line-clamp-3">
-                {product.description[locale] || product.description['en']}
+                {product.description[locale] || product.description[locale === 'ar' ? 'en' : 'ar']}
               </p>
             </div>
 

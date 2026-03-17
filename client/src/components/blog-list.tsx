@@ -50,7 +50,7 @@ export function BlogList({
             <div className="relative aspect-video lg:aspect-auto w-full overflow-hidden bg-muted">
               <Image 
                 src={posts[0].image ? (posts[0].image.startsWith('http') ? posts[0].image : `${storageUrl}/${posts[0].image}`) : '/logo.jpeg'} 
-                alt={posts[0].title[locale] || translations.untitled} 
+                alt={posts[0].title[locale] || posts[0].title[locale === 'ar' ? 'en' : 'ar'] || translations.untitled} 
                 fill 
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 unoptimized
@@ -69,11 +69,11 @@ export function BlogList({
               </div>
               
               <h2 className="text-3xl lg:text-5xl font-black mb-6 group-hover:text-mtozero-cyan transition-colors leading-tight">
-                {posts[0].title[locale] || translations.untitled}
+                {posts[0].title[locale] || posts[0].title[locale === 'ar' ? 'en' : 'ar'] || translations.untitled}
               </h2>
               
               <p className="text-muted-foreground text-lg line-clamp-3 mb-10 font-light">
-                {posts[0].content[locale] || translations.noContent}
+                {posts[0].content[locale] || posts[0].content[locale === 'ar' ? 'en' : 'ar'] || translations.noContent}
               </p>
               
               <div className="flex items-center gap-3 text-mtozero-cyan font-black uppercase tracking-widest text-sm group-hover:gap-5 transition-all">
@@ -102,7 +102,7 @@ export function BlogList({
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
                 <Image 
                   src={post.image ? (post.image.startsWith('http') ? post.image : `${storageUrl}/${post.image}`) : '/logo.jpeg'} 
-                  alt={post.title[locale] || translations.untitled} 
+                  alt={post.title[locale] || post.title[locale === 'ar' ? 'en' : 'ar'] || translations.untitled} 
                   fill 
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   unoptimized
@@ -118,11 +118,11 @@ export function BlogList({
                 </div>
                 
                 <h3 className="text-xl font-bold mb-3 group-hover:text-mtozero-purple transition-colors line-clamp-2">
-                  {post.title[locale] || translations.untitled}
+                  {post.title[locale] || post.title[locale === 'ar' ? 'en' : 'ar'] || translations.untitled}
                 </h3>
                 
                 <p className="text-muted-foreground text-sm line-clamp-2 mb-6 flex-1 font-light">
-                  {post.content[locale] || translations.noContent}
+                  {post.content[locale] || post.content[locale === 'ar' ? 'en' : 'ar'] || translations.noContent}
                 </p>
                 
                 <div className="flex items-center gap-2 text-mtozero-purple text-xs font-black uppercase tracking-widest group-hover:gap-3 transition-all">
