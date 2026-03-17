@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { ArrowLeft, ArrowRight, Calendar, User, Clock, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,8 +37,29 @@ export function BlogDetailContent({
   const isRtl = locale === 'ar';
   const BackIcon = isRtl ? ArrowRight : ArrowLeft;
 
+  const [copied, setCopied] = useState(false);
   const title = post.title[locale] || post.title[locale === 'ar' ? 'en' : 'ar'] || translations.untitled;
   const content = post.content[locale] || post.content[locale === 'ar' ? 'en' : 'ar'] || translations.noContent;
+
+  const handleShare = async () => {
+    const shareData = {
+      title: title,
+      text: content.substring(0, 100) + '...',
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (err) {
+      console.error('Error sharing:', err);
+    }
+  };
 
   return (
     <article className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative">
@@ -107,9 +129,12 @@ export function BlogDetailContent({
         </div>
         
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-muted hover:bg-muted/80 transition-colors text-sm font-medium">
+          <button 
+            onClick={handleShare}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full transition-all text-sm font-medium ${copied ? 'bg-mtozero-cyan text-black' : 'bg-muted hover:bg-muted/80'}`}
+          >
             <Share2 className="w-4 h-4" />
-            {translations.share}
+            {copied ? (isRtl ? 'تم النسخ!' : 'Copied!') : translations.share}
           </button>
         </div>
       </footer>
