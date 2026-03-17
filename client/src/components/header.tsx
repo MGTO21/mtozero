@@ -60,8 +60,10 @@ export function Header({ locale }: { locale: string }) {
   const t = useTranslations("Navigation");
   const [socialLinks, setSocialLinks] = useState<SocialLinkType[]>([]);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/social-links')
+    fetch(`${API_URL}/social-links`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -69,7 +71,7 @@ export function Header({ locale }: { locale: string }) {
         }
       })
       .catch(err => console.error('Failed to fetch social links:', err));
-  }, []);
+  }, [API_URL]);
 
   return (
     <motion.header 
@@ -124,15 +126,10 @@ export function Header({ locale }: { locale: string }) {
               </Link>
             ))}
             
-            {/* Fallback if no links exist */}
+            {/* Fallback if no links exist (optional, can be empty) */}
             {socialLinks.length === 0 && (
                 <div className="flex gap-3">
-                   <Link href="https://twitter.com" target="_blank" className="text-muted-foreground hover:text-mtozero-cyan transition-colors">
-                     <Twitter className="h-4 w-4" />
-                   </Link>
-                   <Link href="https://github.com" target="_blank" className="text-muted-foreground hover:text-mtozero-purple transition-colors">
-                     <Github className="h-4 w-4" />
-                   </Link>
+                   {/* Removed hardcoded Twitter/Github to respect admin deletions */}
                 </div>
             )}
           </div>

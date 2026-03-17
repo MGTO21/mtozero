@@ -58,8 +58,10 @@ export function Footer({ locale }: { locale: string }) {
   const [socialLinks, setSocialLinks] = useState<SocialLinkType[]>([]);
   const isRtl = locale === 'ar';
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/social-links')
+    fetch(`${API_URL}/social-links`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -67,7 +69,7 @@ export function Footer({ locale }: { locale: string }) {
         }
       })
       .catch(err => console.error('Failed to fetch social links for footer:', err));
-  }, []);
+  }, [API_URL]);
 
   return (
     <footer className="w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-12">
