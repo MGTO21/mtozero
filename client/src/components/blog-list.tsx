@@ -53,7 +53,7 @@ export function BlogList({
                 alt={posts[0].title[locale] || posts[0].title[locale === 'ar' ? 'en' : 'ar'] || translations.untitled} 
                 fill 
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
-                unoptimized
+
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60" />
@@ -105,7 +105,7 @@ export function BlogList({
                   alt={post.title[locale] || post.title[locale === 'ar' ? 'en' : 'ar'] || translations.untitled} 
                   fill 
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  unoptimized
+
                 />
               </div>
               

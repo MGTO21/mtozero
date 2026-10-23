@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             SocialLinkSeeder::class,
             DemoDataSeeder::class,
+            CompanyContentSeeder::class,
         ]);
     }
 }

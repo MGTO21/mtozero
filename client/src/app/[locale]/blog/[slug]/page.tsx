@@ -2,9 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { BlogDetailContent } from "@/components/blog-detail-content";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getBlogPost } from "@/lib/content";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
-const STORAGE_URL = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://127.0.0.1:8000/storage';
+const STORAGE_URL = '/storage';
 
 interface BlogPostType {
   id: number;
@@ -35,14 +35,7 @@ export async function generateMetadata({ params: { locale, slug } }: { params: {
 }
 
 async function getPost(slug: string): Promise<BlogPostType | null> {
-  try {
-    const res = await fetch(`${API_URL}/blog/${slug}`, { next: { revalidate: 3600 } });
-    if (!res.ok) return null;
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching blog post:", error);
-    return null;
-  }
+  return getBlogPost(slug);
 }
 
 export default async function BlogPostDetailPage({ params: { locale, slug } }: { params: { locale: 'en' | 'ar', slug: string } }) {

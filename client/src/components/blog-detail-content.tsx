@@ -103,7 +103,7 @@ export function BlogDetailContent({
             alt={title} 
             fill 
             className="object-cover" 
-            unoptimized
+
             priority
           />
         </div>

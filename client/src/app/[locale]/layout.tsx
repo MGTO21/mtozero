@@ -5,6 +5,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { WhatsappButton } from "@/components/whatsapp-button";
 import NextTopLoader from 'nextjs-toploader';
 import "../globals.css";
 
@@ -53,8 +54,11 @@ export async function generateMetadata({ params: { locale } }: { params: { local
       google: "1wlCGDL4si31kzIKh48hdTHTdOnx3B6v4qMDeMYT77A",
     },
     icons: {
-      icon: "/logo.jpeg",
-      shortcut: "/logo.jpeg",
+      icon: [
+        { url: "/icon.svg", type: "image/svg+xml" },
+        { url: "/logo.jpeg", type: "image/jpeg" },
+      ],
+      shortcut: "/icon.svg",
       apple: "/logo.jpeg",
     },
     openGraph: {
@@ -64,10 +68,10 @@ export async function generateMetadata({ params: { locale } }: { params: { local
       siteName: "MTOZERO",
       images: [
         {
-          url: "/logo.jpeg",
-          width: 800,
-          height: 800,
-          alt: "MTOZERO Logo",
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "MTOZERO — Smart Digital Solutions",
         },
       ],
       locale: locale === "ar" ? "ar_SA" : "en_US",
@@ -77,7 +81,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
       card: "summary_large_image",
       title: t('title'),
       description: t('description'),
-      images: ["/logo.jpeg"],
+      images: ["/og-image.png"],
       creator: "@mtozero",
     },
     robots: {
@@ -158,11 +162,12 @@ export default async function RootLayout({
                   </div>
                   
                   {/* Subtle Grid / Noise */}
-                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] brightness-100 contrast-150" />
+                  <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.02] brightness-100 contrast-150" />
                 </div>
                 {children}
               </main>
               <Footer locale={locale} />
+              <WhatsappButton locale={locale} />
             </div>
           </ThemeProvider>
         </NextIntlClientProvider>

@@ -2,8 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { AlertCircle } from "lucide-react";
 import { SaasList } from "@/components/saas-list";
 import { Metadata } from "next";
+import { getSaasProducts } from "@/lib/content";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   return {
@@ -18,14 +18,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 }
 
 async function getProducts() {
-  try {
-    const res = await fetch(`${API_URL}/saas-products`, { next: { revalidate: 3600 } });
-    if (!res.ok) return [];
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching SaaS products:", error);
-    return [];
-  }
+  return getSaasProducts();
 }
 
 export default async function SaasIndexPage({ params: { locale } }: { params: { locale: 'en' | 'ar' } }) {

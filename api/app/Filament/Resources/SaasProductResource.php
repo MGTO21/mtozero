@@ -34,6 +34,13 @@ class SaasProductResource extends Resource
                 Forms\Components\Textarea::make('name')
                     ->label('اسم المنتج')
                     ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                        $slug = \Illuminate\Support\Str::slug($state);
+                        if ($operation === 'create' && $slug !== '') {
+                            $set('slug', $slug);
+                        }
+                    })
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('description')
                     ->label('وصف المنتج')
@@ -62,6 +69,8 @@ class SaasProductResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('slug')
                     ->label('الرابط المختصر (Slug)')
+                    ->helperText('يُقترح تلقائياً من الاسم. يجب أن يكون فريداً ولا يتكرر مع منتج آخر.')
+                    ->unique(ignoreRecord: true)
                     ->required(),
                 Forms\Components\TextInput::make('url')
                     ->label('رابط المشروع المباشر'),

@@ -2,9 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { AlertCircle } from "lucide-react";
 import { PortfolioList } from "@/components/portfolio-list";
 import { Metadata } from "next";
+import { getPortfolio } from "@/lib/content";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
-const STORAGE_URL = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://127.0.0.1:8000/storage';
+const STORAGE_URL = '/storage';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   await getTranslations({ locale, namespace: 'SEO' });
@@ -21,14 +21,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 }
 
 async function getProjects() {
-  try {
-    const res = await fetch(`${API_URL}/portfolio`, { next: { revalidate: 3600 } });
-    if (!res.ok) return [];
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    return [];
-  }
+  return getPortfolio();
 }
 
 export default async function PortfolioPage({ params: { locale } }: { params: { locale: 'en' | 'ar' } }) {

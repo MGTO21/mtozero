@@ -16,6 +16,8 @@ interface ServiceType {
   features: Record<string, { item: string }[] | null>;
 }
 
+const API_URL = "/api";
+
 export default function ServiceDetail() {
   const t = useTranslations("Navigation");
   const params = useParams();
@@ -24,13 +26,14 @@ export default function ServiceDetail() {
   
   const [service, setService] = useState<ServiceType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [safeContent, setSafeContent] = useState("");
 
   const isRtl = locale === 'ar';
   const BackIcon = isRtl ? ArrowRight : ArrowLeft;
   const NextIcon = isRtl ? ChevronLeft : ChevronRight;
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/services/${id}`)
+    fetch(`${API_URL}/services/${id}`)
       .then(res => {
         if (!res.ok) throw new Error("Service not found");
         return res.json();
@@ -44,6 +47,17 @@ export default function ServiceDetail() {
         setLoading(false);
       });
   }, [id]);
+
+  useEffect(() => {
+    const rawContent = service?.content?.[locale] || service?.content?.[locale === 'ar' ? 'en' : 'ar'] || '';
+    if (!rawContent) {
+      setSafeContent('');
+      return;
+    }
+    import('dompurify').then(({ default: DOMPurify }) => {
+      setSafeContent(DOMPurify.sanitize(rawContent));
+    });
+  }, [service, locale]);
 
   if (loading) {
     return (
@@ -67,7 +81,7 @@ export default function ServiceDetail() {
 
   const title = service.title[locale] || service.title[locale === 'ar' ? 'en' : 'ar'] || (isRtl ? 'خدمة بدون عنوان' : 'Untitled Service');
   const description = service.description[locale] || service.description[locale === 'ar' ? 'en' : 'ar'];
-  const content = service.content?.[locale] || service.content?.[locale === 'ar' ? 'en' : 'ar'] || '';
+  const content = safeContent;
   const rawFeatures = service.features?.[locale] || service.features?.[locale === 'ar' ? 'en' : 'ar'] || [];
   const features = Array.isArray(rawFeatures) ? rawFeatures : [];
 
@@ -176,8 +190,8 @@ export default function ServiceDetail() {
                 ? 'تواصل معنا اليوم لمناقشة كيف يمكننا تحويل رؤيتك الرقمية إلى واقع ملموس.' 
                 : 'Contact us today to discuss how we can transform your digital vision into reality.'}
             </p>
-            <Link 
-              href={`/${locale}`}
+            <Link
+              href={`/${locale}/contact`}
               className="inline-flex items-center gap-3 px-10 py-5 bg-mtozero-cyan text-black font-black rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-mtozero-cyan/40"
             >
               {isRtl ? 'تواصل معنا' : 'Contact Us'}

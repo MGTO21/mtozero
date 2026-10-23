@@ -2,8 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { SaasDetailContent } from "@/components/saas-detail-content";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getSaasProduct } from "@/lib/content";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP || '+249992673760';
 
 interface SaasProductType {
@@ -34,14 +34,7 @@ export async function generateMetadata({ params: { locale, slug } }: { params: {
 }
 
 async function getProduct(slug: string): Promise<SaasProductType | null> {
-  try {
-    const res = await fetch(`${API_URL}/saas-products/${slug}`, { next: { revalidate: 3600 } });
-    if (!res.ok) return null;
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching SaaS product:", error);
-    return null;
-  }
+  return getSaasProduct(slug);
 }
 
 export default async function SaasDetailPage({ params: { locale, slug } }: { params: { locale: 'en' | 'ar', slug: string } }) {

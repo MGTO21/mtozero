@@ -34,6 +34,15 @@ class BlogPostResource extends Resource
                 Forms\Components\Textarea::make('title')
                     ->label('عنوان المقال')
                     ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                        $slug = \Illuminate\Support\Str::slug($state);
+                        // Arabic (and other non-Latin) titles produce an empty slug —
+                        // leave the field for manual input in that case.
+                        if ($operation === 'create' && $slug !== '') {
+                            $set('slug', $slug);
+                        }
+                    })
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('content')
                     ->label('محتوى المقال')
@@ -41,6 +50,8 @@ class BlogPostResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('slug')
                     ->label('الرابط المختصر (Slug)')
+                    ->helperText('يُقترح تلقائياً من العنوان. يجب أن يكون فريداً ولا يتكرر مع مقال آخر.')
+                    ->unique(ignoreRecord: true)
                     ->required(),
                 Forms\Components\FileUpload::make('image')
                     ->label('صورة الغلاف')

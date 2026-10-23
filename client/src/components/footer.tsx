@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useSocialLinks } from "@/lib/social-links";
 import {
   Twitter,
   Github,
@@ -18,13 +18,6 @@ import {
   MessageCircle,
   Link as LinkIcon
 } from "lucide-react";
-
-interface SocialLinkType {
-  id: number;
-  platform: Record<string, string>;
-  url: string;
-  icon: string | null;
-}
 
 // Helper to render icon by name
 const IconRenderer = ({ name, className }: { name: string | null, className?: string }) => {
@@ -55,21 +48,8 @@ const IconRenderer = ({ name, className }: { name: string | null, className?: st
 
 export function Footer({ locale }: { locale: string }) {
   const t = useTranslations("Navigation");
-  const [socialLinks, setSocialLinks] = useState<SocialLinkType[]>([]);
+  const { links: socialLinks, loading: socialLinksLoading } = useSocialLinks();
   const isRtl = locale === 'ar';
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
-
-  useEffect(() => {
-    fetch(`${API_URL}/social-links`)
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setSocialLinks(data);
-        }
-      })
-      .catch(err => console.error('Failed to fetch social links for footer:', err));
-  }, [API_URL]);
 
   return (
     <footer className="w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-12">
@@ -100,6 +80,7 @@ export function Footer({ locale }: { locale: string }) {
               <Link href={`/${locale}/portfolio`} className="hover:text-mtozero-cyan transition-colors">{t("portfolio")}</Link>
               <Link href={`/${locale}/saas`} className="hover:text-mtozero-cyan transition-colors">{t("saas")}</Link>
               <Link href={`/${locale}/blog`} className="hover:text-mtozero-cyan transition-colors">{t("blog")}</Link>
+              <Link href={`/${locale}/contact`} className="hover:text-mtozero-cyan transition-colors">{t("contact")}</Link>
             </nav>
           </div>
 
@@ -127,7 +108,7 @@ export function Footer({ locale }: { locale: string }) {
                   <IconRenderer name={link.icon} className="h-5 w-5 transition-transform group-hover:scale-110" />
                 </Link>
               ))}
-              {socialLinks.length === 0 && (
+              {socialLinks.length === 0 && !socialLinksLoading && (
                 <p className="text-xs text-muted-foreground italic">
                   {isRtl ? 'لا توجد روابط تواصل حالياً' : 'No social links available'}
                 </p>

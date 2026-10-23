@@ -45,7 +45,7 @@ export function PortfolioList({
                 alt=""
                 fill 
                 className="object-cover blur-2xl opacity-40 scale-110" 
-                unoptimized
+
               />
 
               {/* Main Image (Contain) */}
@@ -57,7 +57,7 @@ export function PortfolioList({
                   alt={project.title[locale]} 
                   fill 
                   className="object-contain group-hover:scale-[1.02] transition-transform duration-700" 
-                  unoptimized
+
                   priority={index < 2}
                 />
               </div>

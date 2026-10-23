@@ -2,9 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { PortfolioDetailContent } from "@/components/portfolio-detail-content";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getPortfolioProject } from "@/lib/content";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
-const STORAGE_URL = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://127.0.0.1:8000/storage';
+const STORAGE_URL = '/storage';
 
 interface PortfolioProjectData {
   id: number;
@@ -42,14 +42,7 @@ export async function generateMetadata({ params: { locale, id } }: { params: { l
 }
 
 async function getProject(id: string): Promise<PortfolioProjectData | null> {
-  try {
-    const res = await fetch(`${API_URL}/portfolio/${id}`, { next: { revalidate: 3600 } });
-    if (!res.ok) return null;
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching project:", error);
-    return null;
-  }
+  return getPortfolioProject(id);
 }
 
 export default async function PortfolioDetailPage({ params: { locale, id } }: { params: { locale: 'en' | 'ar', id: string } }) {

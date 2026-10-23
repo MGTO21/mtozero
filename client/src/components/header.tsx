@@ -20,14 +20,7 @@ import {
 import { ThemeToggle, LocaleToggle } from "./theme-toggle";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-
-interface SocialLinkType {
-  id: number;
-  platform: Record<string, string>;
-  url: string;
-  icon: string | null;
-}
+import { useSocialLinks } from "@/lib/social-links";
 
 // Helper to render icon by name
 const IconRenderer = ({ name, className }: { name: string | null, className?: string }) => {
@@ -58,20 +51,7 @@ const IconRenderer = ({ name, className }: { name: string | null, className?: st
 
 export function Header({ locale }: { locale: string }) {
   const t = useTranslations("Navigation");
-  const [socialLinks, setSocialLinks] = useState<SocialLinkType[]>([]);
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
-
-  useEffect(() => {
-    fetch(`${API_URL}/social-links`)
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setSocialLinks(data);
-        }
-      })
-      .catch(err => console.error('Failed to fetch social links:', err));
-  }, [API_URL]);
+  const { links: socialLinks } = useSocialLinks();
 
   return (
     <motion.header 
@@ -107,6 +87,7 @@ export function Header({ locale }: { locale: string }) {
           <Link href={`/${locale}/portfolio`} className="hover:text-foreground transition-colors">{t("portfolio") ?? "Portfolio"}</Link>
           <Link href={`/${locale}/saas`} className="hover:text-foreground transition-colors">{t("saas") ?? "SaaS Products"}</Link>
           <Link href={`/${locale}/blog`} className="hover:text-foreground transition-colors">{t("blog") ?? "Blog"}</Link>
+          <Link href={`/${locale}/contact`} className="text-mtozero-cyan hover:text-mtozero-cyan/80 transition-colors font-bold">{t("contact") ?? "Contact"}</Link>
         </nav>
 
         {/* Global Controls */}

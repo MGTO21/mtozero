@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['mtozero.tech@gmail.com'];
+    }
+
+    function str(field, minLen, maxLen) {
+      return request.resource.data[field] is string
+        && request.resource.data[field].size() >= minLen
+        && request.resource.data[field].size() <= maxLen;
+    }
+
+    function optStr(field, maxLen) {
+      return !(field in request.resource.data) || str(field, 0, maxLen);
+    }
+
+    function validEmail() {
+      return str('email', 3, 255)
+        && request.resource.data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
+    }
+
+    // Admin: full access everywhere.
+    match /{collection}/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Public site: read only what is visible. List queries must filter on the same flag.
+    match /services/{id}           { allow read: if resource.data.is_active == true; }
+    match /saas_products/{id}      { allow read: if resource.data.is_active == true; }
+    match /social_links/{id}       { allow read: if resource.data.is_active == true; }
+    match /portfolio_projects/{id} { allow read: if resource.data.is_published == true; }
+    match /blog_posts/{id}         { allow read: if resource.data.is_published == true; }
+    match /stats/{id}              { allow read: if resource.data.is_published == true; }
+    match /testimonials/{id}       { allow read: if resource.data.is_published == true; }
+    match /faqs/{id}               { allow read: if resource.data.is_published == true; }
+
+    // Public forms: create-only, strict shape.
+    match /contact_messages/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'subject', 'message', 'created_at'])
+        && str('name', 1, 255)
+        && validEmail()
+        && optStr('subject', 255)
+        && str('message', 1, 5000)
+        && request.resource.data.created_at == request.time;
+    }
+
+    match /quote_requests/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'project_type', 'budget', 'timeline', 'details', 'status', 'created_at'])
+        && str('name', 1, 255)
+        && validEmail()
+        && optStr('phone', 50)
+        && str('project_type', 1, 100)
+        && optStr('budget', 100)
+        && optStr('timeline', 100)
+        && str('details', 1, 5000)
+        && request.resource.data.status == 'new'
+        && request.resource.data.created_at == request.time;
+    }
+  }
+}

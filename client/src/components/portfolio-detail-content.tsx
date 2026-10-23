@@ -81,7 +81,7 @@ export function PortfolioDetailContent({
               alt="" 
               fill 
               className="object-cover blur-3xl opacity-30 scale-110" 
-              unoptimized
+
             />
 
             {/* Main Image (Contain) */}
@@ -91,7 +91,7 @@ export function PortfolioDetailContent({
                 alt={project.title[locale] || translations.untitled} 
                 fill 
                 className="object-contain transition-transform duration-700 group-hover:scale-[1.01]"
-                unoptimized
+
                 priority
               />
             </div>
@@ -108,7 +108,7 @@ export function PortfolioDetailContent({
                   onClick={() => setActiveImage(img)}
                   className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 ${activeImage === img ? 'border-mtozero-cyan scale-105 shadow-lg' : 'border-transparent hover:border-mtozero-cyan/50 opacity-60 hover:opacity-100'}`}
                 >
-                  <Image src={img} alt={`Thumbnail ${idx+1}`} fill className="object-cover" unoptimized />
+                  <Image src={img} alt={`Thumbnail ${idx+1}`} fill className="object-cover" />
                 </button>
               ))}
             </div>

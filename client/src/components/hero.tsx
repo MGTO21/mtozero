@@ -1,6 +1,8 @@
+"use client";
+
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 // No icon imports needed for current Hero design
 
@@ -13,11 +15,6 @@ export function Hero() {
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null;
 
   return (
     <section ref={containerRef} className="relative flex flex-col items-center justify-center min-h-screen px-4 w-full overflow-hidden bg-background pt-20">
@@ -47,7 +44,7 @@ export function Hero() {
         />
         
         {/* Grid Overlay */}
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] brightness-100 contrast-150" />
+        <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03] brightness-100 contrast-150" />
       </div>
 
       <div className="container max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24 relative z-10 px-6">
@@ -192,7 +189,7 @@ export function Hero() {
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               className="absolute top-[8%] left-[-5%] sm:left-[0%] p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-white/40 dark:bg-black/60 backdrop-blur-3xl border border-black/5 dark:border-white/10 shadow-xl ring-1 ring-black/5 dark:ring-white/10 max-w-[120px] sm:max-w-[180px]"
             >
-              <h5 className="text-[7px] sm:text-[9px] font-black text-mtozero-cyan uppercase tracking-widest mb-1 sm:mb-2">{t("vision_label")}</h5>
+              <h5 className="text-[9px] sm:text-[10px] font-black text-mtozero-cyan uppercase tracking-widest mb-1 sm:mb-2">{t("vision_label")}</h5>
               <p className="text-xs sm:text-lg font-black text-foreground dark:text-white leading-tight">{t("vision_title")}</p>
               <div className="mt-3 sm:mt-4 flex gap-0.5 sm:gap-1">
                 {[...Array(6)].map((_, i) => (
@@ -214,7 +211,7 @@ export function Hero() {
               {[t("vision_stat_1"), t("vision_stat_2"), t("vision_stat_3")].map((stat, i) => (
                 <div key={i} className="flex items-center gap-2 sm:gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-mtozero-purple shadow-[0_0_10px_#8b5cf6]" />
-                  <span className="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest text-foreground/60 dark:text-white/60">{stat}</span>
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-foreground/60 dark:text-white/60">{stat}</span>
                 </div>
               ))}
             </motion.div>
@@ -228,7 +225,7 @@ export function Hero() {
         style={{ opacity }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
       >
-        <span className="text-[9px] uppercase font-black tracking-[0.6em] text-white/20">{isRtl ? "اكتشف المزيد" : "The Future Awaits"}</span>
+        <span className="text-[10px] uppercase font-black tracking-[0.6em] text-foreground/25 dark:text-white/20">{isRtl ? "اكتشف المزيد" : "The Future Awaits"}</span>
         <motion.div 
           animate={{ height: [20, 40, 20], opacity: [0.2, 0.5, 0.2] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}

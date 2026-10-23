@@ -2,9 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { AlertCircle } from "lucide-react";
 import { BlogList } from "@/components/blog-list";
 import { Metadata } from "next";
+import { getBlogPosts } from "@/lib/content";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
-const STORAGE_URL = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://127.0.0.1:8000/storage';
+const STORAGE_URL = '/storage';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   return {
@@ -19,14 +19,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 }
 
 async function getPosts() {
-  try {
-    const res = await fetch(`${API_URL}/blog`, { next: { revalidate: 3600 } });
-    if (!res.ok) return [];
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching blog posts:", error);
-    return [];
-  }
+  return getBlogPosts();
 }
 
 export default async function BlogPage({ params: { locale } }: { params: { locale: 'en' | 'ar' } }) {

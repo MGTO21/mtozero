@@ -7,6 +7,10 @@ use App\Http\Controllers\Api\PortfolioProjectController;
 use App\Http\Controllers\Api\SaasProductController;
 use App\Http\Controllers\Api\BlogPostController;
 use App\Http\Controllers\Api\ContactMessageController;
+use App\Http\Controllers\Api\TestimonialController;
+use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\StatController;
+use App\Http\Controllers\Api\QuoteRequestController;
 
 // Public Read-Only Endpoints
 Route::get('/services', [ServiceController::class, 'index']);
@@ -23,8 +27,13 @@ Route::get('/blog/{slug}', [BlogPostController::class, 'show']);
 
 Route::get('/social-links', [App\Http\Controllers\Api\SocialLinkController::class, 'index']);
 
-// Public Store Endpoint
-Route::post('/contact', [ContactMessageController::class, 'store']);
+Route::get('/testimonials', [TestimonialController::class, 'index']);
+Route::get('/faqs', [FaqController::class, 'index']);
+Route::get('/stats', [StatController::class, 'index']);
+
+// Public Store Endpoints (rate-limited: 5 submissions per minute per IP)
+Route::post('/contact', [ContactMessageController::class, 'store'])->middleware('throttle:5,1');
+Route::post('/quote-requests', [QuoteRequestController::class, 'store'])->middleware('throttle:5,1');
 
 Route::get('/user', function (Request $request) {
     return $request->user();

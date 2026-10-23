@@ -16,6 +16,12 @@
     "services": "Services",
     "portfolio": "Portfolio",
     "saas": "SaaS Products",
-    "blog": "Blog"
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "SEO": {
+    "title": "MTOZERO | Mohammed Moatasim - Software Solutions",
+    "description": "Premium digital solutions by Mohammed Moatasim (MTOZERO). High-performance web development using Next.js, Laravel, and AI-driven architectures.",
+    "keywords": "Mohammed Moatasim, MTOZERO, Software Developer, Full Stack Developer, Web Development, Laravel, Next.js, AI Solutions, Sudan Tech"
   }
 }

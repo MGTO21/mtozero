@@ -31,6 +31,19 @@ class ContactMessageResource extends Resource
         return false;
     }
 
+    // Badge: number of messages received in the last 7 days
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::where('created_at', '>=', now()->subDays(7))->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
