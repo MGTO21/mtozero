@@ -96,8 +96,6 @@ export default function ServiceDetail() {
         
         {/* Back Button */}
         <motion.div 
-          initial={{ opacity: 0, x: isRtl ? 20 : -20 }}
-          animate={{ opacity: 1, x: 0 }}
           className="mb-12"
         >
           <Link 
@@ -114,9 +112,6 @@ export default function ServiceDetail() {
           {/* Left Column: Info */}
           <div className="lg:col-span-12">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
             >
               <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-foreground">
                 {title}
@@ -131,9 +126,6 @@ export default function ServiceDetail() {
               
               {/* Detailed Content */}
               <motion.div 
-                initial={{ opacity: 0, x: isRtl ? 30 : -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
                 className="space-y-6"
               >
                 <div className="flex items-center gap-3 mb-6">
@@ -148,9 +140,6 @@ export default function ServiceDetail() {
 
               {/* Key Features List */}
               <motion.div
-                initial={{ opacity: 0, x: isRtl ? -30 : 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
                 className="bg-card/30 rounded-3xl p-8 border border-border/50 backdrop-blur-sm self-start"
               >
                 <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
@@ -176,8 +165,6 @@ export default function ServiceDetail() {
 
         {/* CTA Section */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
           className="mt-20 p-12 rounded-[2.5rem] bg-gradient-to-br from-mtozero-cyan/10 via-background to-mtozero-purple/10 border border-mtozero-cyan/20 text-center relative overflow-hidden"
         >
           <div className="absolute -top-24 -left-24 w-64 h-64 bg-mtozero-cyan/10 rounded-full blur-3xl" />

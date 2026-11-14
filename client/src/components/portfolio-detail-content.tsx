@@ -50,8 +50,6 @@ export function PortfolioDetailContent({
       
       {/* Back Navigation */}
       <motion.div 
-        initial={{ opacity: 0, x: isRtl ? 20 : -20 }}
-        animate={{ opacity: 1, x: 0 }}
         className="mb-10"
       >
         <Link 
@@ -68,9 +66,6 @@ export function PortfolioDetailContent({
         
         {/* Left Column: Image Gallery */}
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
           className="lg:col-span-7 space-y-6"
         >
           {/* Main Active Image Showcase */}
@@ -117,9 +112,6 @@ export function PortfolioDetailContent({
 
         {/* Right Column: Project Details */}
         <motion.div 
-          initial={{ opacity: 0, x: isRtl ? -30 : 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
           className="lg:col-span-5 flex flex-col justify-center"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-mtozero-cyan/10 text-mtozero-cyan border border-mtozero-cyan/20 w-fit mb-6 text-sm font-semibold">

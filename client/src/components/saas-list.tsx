@@ -28,13 +28,9 @@ export function SaasList({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-      {products.map((product, index) => (
+      {products.map((product) => (
         <Link href={`/${locale}/saas/${product.slug}`} key={product.id}>
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
             className="group h-full p-8 md:p-10 rounded-3xl bg-card border border-border hover:border-mtozero-purple/40 transition-all duration-300 relative overflow-hidden flex flex-col"
           >
             {/* Card Hover Ambience */}

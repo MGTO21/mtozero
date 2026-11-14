@@ -44,8 +44,6 @@ export function SaasDetailContent({
     <div className="min-h-[90vh] flex flex-col items-center justify-center py-20 px-4 relative">
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/4 right-1/4 w-[40vw] h-[40vw] rounded-full bg-gradient-to-br from-mtozero-cyan/20 to-mtozero-purple/20 blur-[100px]"
         />
       </div>
@@ -57,9 +55,6 @@ export function SaasDetailContent({
         </Link>
         
         <motion.div
-           initial={{ opacity: 0, scale: 0.95 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 0.7 }}
            className="bg-card/50 backdrop-blur-xl border border-border rounded-3xl p-8 md:p-14 shadow-2xl relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-mtozero-cyan to-mtozero-purple" />
@@ -102,9 +97,6 @@ export function SaasDetailContent({
                   {features.map((feature, idx) => (
                     <motion.li 
                       key={idx}
-                      initial={{ opacity: 0, x: isRtl ? 20 : -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + (idx * 0.1) }}
                       className="flex items-start gap-3"
                     >
                       <CheckCircle2 className="w-6 h-6 text-mtozero-purple shrink-0" />

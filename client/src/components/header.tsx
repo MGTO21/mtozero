@@ -76,66 +76,32 @@ export function Header({ locale }: { locale: string }) {
   ];
 
   return (
-    <motion.header 
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-    >
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between mx-auto px-4 md:px-8">
-        
-        {/* Logo Section */}
-        <Link href={`/${locale}`} className="flex items-center gap-3 transition-opacity hover:opacity-80">
-          <div className="relative h-9 w-9 overflow-hidden rounded-md border border-mtozero-cyan/20">
-            <Image 
-              src="/logo.jpeg" 
-              alt="MTOZERO" 
-              fill 
-              sizes="36px"
-              className="object-cover" 
-              priority
-            />
-          </div>
-          <span className="text-xl font-bold tracking-tighter flex items-center gap-[2px]">
-            <span className="text-mtozero-cyan font-light">{"{"}</span>
-            <span>MTOZERO</span>
-            <span className="text-mtozero-purple font-light">{"}"}</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
+      <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between gap-6 px-4 md:px-8">
+        <Link href={`/${locale}`} className="flex items-center gap-2.5" dir="ltr">
+          <span className="relative h-8 w-8 overflow-hidden rounded border border-border">
+            <Image src="/logo.jpeg" alt="" fill sizes="32px" className="object-cover" priority />
           </span>
+          <span className="font-display text-lg font-bold tracking-tight text-foreground">MTOZERO</span>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
+        <nav className="hidden md:flex items-center gap-7 text-[15px] text-muted-foreground">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-foreground transition-colors">{link.label}</Link>
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={pathname?.startsWith(link.href) ? "page" : undefined}
+              className="transition-colors duration-150 hover:text-foreground aria-[current=page]:text-foreground"
+            >
+              {link.label}
+            </Link>
           ))}
-          <Link href={`/${locale}/contact`} className="text-mtozero-cyan hover:text-mtozero-cyan/80 transition-colors font-bold">{t("contact")}</Link>
+          <Link href={`/${locale}/contact`} className="font-semibold text-brand transition-colors duration-150 hover:text-foreground">
+            {t("contact")}
+          </Link>
         </nav>
 
-        {/* Global Controls */}
-        <div className="flex items-center gap-3 md:gap-4">
-          
-          {/* Dynamic Social Icons */}
-          <div className="hidden sm:flex items-center gap-3 mr-2 border-r border-border pr-5">
-            {socialLinks.map((link) => (
-              <Link 
-                key={link.id} 
-                href={link.url} 
-                target="_blank" 
-                className="text-muted-foreground hover:text-mtozero-cyan transition-colors"
-                title={link.platform[locale] || link.platform['en']}
-              >
-                <IconRenderer name={link.icon} className="h-4 w-4" />
-              </Link>
-            ))}
-            
-            {/* Fallback if no links exist (optional, can be empty) */}
-            {socialLinks.length === 0 && (
-                <div className="flex gap-3">
-                   {/* Removed hardcoded Twitter/Github to respect admin deletions */}
-                </div>
-            )}
-          </div>
-
+        <div className="flex items-center gap-2">
           <LocaleToggle currentLocale={locale} />
           <ThemeToggle />
 
@@ -202,6 +168,6 @@ export function Header({ locale }: { locale: string }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

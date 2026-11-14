@@ -19,8 +19,10 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', 'sans-serif'],
-        arabic: ['var(--font-cairo)', 'sans-serif'],
+        sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
+        arabic: ['var(--font-body)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-body)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -56,16 +58,25 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        brand: {
+          DEFAULT: "hsl(var(--brand) / <alpha-value>)",
+          tint: "hsl(var(--brand-tint) / <alpha-value>)",
+        },
+        night: {
+          DEFAULT: "hsl(var(--night) / <alpha-value>)",
+          foreground: "hsl(var(--night-foreground) / <alpha-value>)",
+        },
+        // Legacy names still used across older pages; both now resolve to the single brand ink.
         mtozero: {
-          cyan: "#00f0ff",
-          purple: "#7a00ff",
-          dark: "#0a0a0c", // Deep Tech Dark Mode
-          alabaster: "#fbfbfb", // Stark Alabaster Light Mode
+          cyan: "hsl(var(--brand) / <alpha-value>)",
+          purple: "hsl(var(--brand) / <alpha-value>)",
+          dark: "hsl(var(--night) / <alpha-value>)",
+          alabaster: "hsl(var(--background) / <alpha-value>)",
         }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-cyan-purple': 'linear-gradient(to right, #00f0ff, #7a00ff)',
+        'gradient-cyan-purple': 'linear-gradient(hsl(var(--brand)), hsl(var(--brand)))',
       },
       borderRadius: {
         lg: "var(--radius)",

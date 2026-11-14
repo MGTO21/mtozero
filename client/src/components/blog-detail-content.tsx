@@ -64,8 +64,6 @@ export function BlogDetailContent({
   return (
     <article className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative">
       <motion.div 
-        initial={{ opacity: 0, x: isRtl ? 20 : -20 }}
-        animate={{ opacity: 1, x: 0 }}
         className="mb-10"
       >
         <Link 

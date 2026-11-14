@@ -38,10 +38,6 @@ export function BlogList({
       {/* Featured First Post */}
       {posts.length > 0 && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
         >
           <Link 
             href={`/${locale}/blog/${posts[0].slug}`}
@@ -87,13 +83,9 @@ export function BlogList({
 
       {/* Subsequent Posts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {posts.slice(1).map((post, index) => (
+        {posts.slice(1).map((post) => (
           <motion.div
             key={post.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
           >
             <Link 
               href={`/${locale}/blog/${post.slug}`}

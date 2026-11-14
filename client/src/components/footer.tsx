@@ -3,128 +3,80 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSocialLinks } from "@/lib/social-links";
-import {
-  Twitter,
-  Github,
-  Linkedin,
-  Facebook,
-  Instagram,
-  Youtube,
-  Mail,
-  Phone,
-  Send,
-  Ghost,
-  Music,
-  MessageCircle,
-  Link as LinkIcon
-} from "lucide-react";
-
-// Helper to render icon by name
-const IconRenderer = ({ name, className }: { name: string | null, className?: string }) => {
-  if (!name) return <LinkIcon className={className} />;
-
-  const normalizedName = name.toLowerCase().trim();
-
-  const iconMap: Record<string, React.ElementType> = {
-    'twitter': Twitter,
-    'github': Github,
-    'linkedin': Linkedin,
-    'facebook': Facebook,
-    'instagram': Instagram,
-    'youtube': Youtube,
-    'mail': Mail,
-    'email': Mail,
-    'phone': Phone,
-    'whatsapp': MessageCircle,
-    'telegram': Send,
-    'snapchat': Ghost,
-    'tiktok': Music,
-    'x': Twitter,
-  };
-
-  const IconComponent = iconMap[normalizedName] || LinkIcon;
-  return <IconComponent className={className} />;
-};
 
 export function Footer({ locale }: { locale: string }) {
-  const t = useTranslations("Navigation");
-  const { links: socialLinks, loading: socialLinksLoading } = useSocialLinks();
-  const isRtl = locale === 'ar';
+  const nav = useTranslations("Navigation");
+  const t = useTranslations("Footer");
+  const { links: socialLinks } = useSocialLinks();
+
+  const pages = [
+    { href: `/${locale}/services`, label: nav("services") },
+    { href: `/${locale}/portfolio`, label: nav("portfolio") },
+    { href: `/${locale}/saas`, label: nav("saas") },
+    { href: `/${locale}/blog`, label: nav("blog") },
+    { href: `/${locale}/contact`, label: nav("contact") },
+  ];
 
   return (
-    <footer className="w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-12">
-      <div className="container max-w-screen-2xl mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+    <footer className="w-full border-t border-border">
+      <div className="mx-auto grid w-full max-w-[1280px] grid-cols-2 gap-x-8 gap-y-10 px-4 py-14 md:px-8 lg:grid-cols-12">
+        <div className="col-span-2 lg:col-span-5">
+          <Link href={`/${locale}`} className="font-display text-lg font-bold tracking-tight text-foreground" dir="ltr">
+            MTOZERO
+          </Link>
+          <p className="mt-3 max-w-sm text-sm font-light leading-relaxed text-muted-foreground">{t("about")}</p>
+        </div>
 
-          {/* Brand Section */}
-          <div className="md:col-span-1">
-            <Link href={`/${locale}`} className="flex items-center gap-3 mb-6 transition-opacity hover:opacity-80">
-              <span className="text-xl font-bold tracking-tighter flex items-center gap-[2px]">
-                <span className="text-mtozero-cyan font-light">{"{"}</span>
-                <span>MTOZERO</span>
-                <span className="text-mtozero-purple font-light">{"}"}</span>
-              </span>
-            </Link>
-            <p className="text-muted-foreground text-sm font-light leading-relaxed">
-              {isRtl
-                ? "حلول رقمية ذكية مصممة للمستقبل. نحن نبني الأنظمة التي تدفع عملك للأمام."
-                : "Smart digital solutions engineered for the future. We build the systems that drive your business forward."}
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div className="md:col-span-1">
-            <h4 className="font-bold mb-6 text-sm uppercase tracking-widest">{isRtl ? 'روابط سريعة' : 'Quick Links'}</h4>
-            <nav className="flex flex-col gap-4 text-sm text-muted-foreground">
-              <Link href={`/${locale}/services`} className="hover:text-mtozero-cyan transition-colors">{t("services")}</Link>
-              <Link href={`/${locale}/portfolio`} className="hover:text-mtozero-cyan transition-colors">{t("portfolio")}</Link>
-              <Link href={`/${locale}/saas`} className="hover:text-mtozero-cyan transition-colors">{t("saas")}</Link>
-              <Link href={`/${locale}/blog`} className="hover:text-mtozero-cyan transition-colors">{t("blog")}</Link>
-              <Link href={`/${locale}/contact`} className="hover:text-mtozero-cyan transition-colors">{t("contact")}</Link>
-            </nav>
-          </div>
-
-          {/* Contact Section Placeholder */}
-          <div className="md:col-span-1">
-            <h4 className="font-bold mb-6 text-sm uppercase tracking-widest">{isRtl ? 'اتصل بنا' : 'Connect'}</h4>
-            <p className="text-sm text-muted-foreground font-light mb-4">
-              {isRtl ? 'الأبيض، السودان' : 'El Obeid, Sudan'}
-            </p>
-            <p className="text-sm text-mtozero-cyan font-medium">mtozero.tech@gmail.com</p>
-          </div>
-
-          {/* ALL Social Links Section */}
-          <div className="md:col-span-1">
-            <h4 className="font-bold mb-6 text-sm uppercase tracking-widest">{isRtl ? 'تابعنا' : 'Follow Us'}</h4>
-            <div className="flex flex-wrap gap-4">
-              {socialLinks.map((link) => (
-                <Link
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-muted hover:bg-mtozero-cyan/10 hover:text-mtozero-cyan transition-all border border-transparent hover:border-mtozero-cyan/20 group"
-                  title={link.platform[locale] || link.platform['en']}
-                >
-                  <IconRenderer name={link.icon} className="h-5 w-5 transition-transform group-hover:scale-110" />
+        <div className="lg:col-span-2">
+          <h4 className="text-xs text-muted-foreground">{t("pages")}</h4>
+          <ul className="mt-4 space-y-2.5 text-sm">
+            {pages.map((p) => (
+              <li key={p.href}>
+                <Link href={p.href} className="text-foreground hover:text-brand transition-colors duration-150">
+                  {p.label}
                 </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:col-span-3">
+          <h4 className="text-xs text-muted-foreground">{t("contact")}</h4>
+          <ul className="mt-4 space-y-2.5 text-sm text-foreground">
+            <li>{t("location")}</li>
+            <li>
+              <a href="mailto:mtozero.tech@gmail.com" className="hover:text-brand transition-colors duration-150" dir="ltr">
+                mtozero.tech@gmail.com
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        {socialLinks.length > 0 && (
+          <div className="lg:col-span-2">
+            <h4 className="text-xs text-muted-foreground">{t("follow")}</h4>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              {socialLinks.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground capitalize hover:text-brand transition-colors duration-150"
+                  >
+                    {link.platform[locale] || link.platform["en"]}
+                  </a>
+                </li>
               ))}
-              {socialLinks.length === 0 && !socialLinksLoading && (
-                <p className="text-xs text-muted-foreground italic">
-                  {isRtl ? 'لا توجد روابط تواصل حالياً' : 'No social links available'}
-                </p>
-              )}
-            </div>
+            </ul>
           </div>
+        )}
+      </div>
 
-        </div>
-
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground font-light">
-          <p>© {new Date().getFullYear()} MTOZERO. {isRtl ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}</p>
-          <div className="flex gap-6">
-            <button className="hover:text-foreground transition-colors">{isRtl ? 'سياسة الخصوصية' : 'Privacy Policy'}</button>
-            <button className="hover:text-foreground transition-colors">{isRtl ? 'اتفاقية الاستخدام' : 'Terms of Service'}</button>
-          </div>
-        </div>
+      <div className="border-t border-border">
+        <p className="mx-auto w-full max-w-[1280px] px-4 py-5 text-xs text-muted-foreground md:px-8">
+          <span dir="ltr">© {new Date().getFullYear()} MTOZERO.</span> {t("rights")}
+        </p>
       </div>
     </footer>
   );

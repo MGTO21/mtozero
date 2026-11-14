@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Cairo } from "next/font/google";
+import { Alexandria, IBM_Plex_Sans_Arabic, IBM_Plex_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -9,18 +9,24 @@ import { WhatsappButton } from "@/components/whatsapp-button";
 import NextTopLoader from 'nextjs-toploader';
 import "../globals.css";
 
-const outfit = Outfit({ 
-  subsets: ["latin"], 
-  variable: "--font-outfit",
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  display: "swap" 
+const display = Alexandria({
+  subsets: ["arabic", "latin"],
+  variable: "--font-display",
+  display: "swap",
 });
 
-const cairo = Cairo({ 
-  subsets: ["arabic"], 
-  variable: "--font-cairo",
-  weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
-  display: "swap" 
+const body = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  variable: "--font-body",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
@@ -107,9 +113,7 @@ export default async function RootLayout({
 }>) {
   const messages = await getMessages();
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const fontClass = locale === "ar" 
-    ? `font-arabic ${cairo.variable}` 
-    : `font-sans ${outfit.variable}`;
+  const fontClass = `font-sans ${display.variable} ${body.variable} ${mono.variable}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -135,35 +139,18 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${fontClass} antialiased min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300 selection:bg-mtozero-purple selection:text-white`}>
-        <NextTopLoader color="#00f0ff" showSpinner={false} />
+      <body className={`${fontClass} antialiased min-h-screen flex flex-col bg-background text-foreground`}>
+        <NextTopLoader color="#08695F" height={2} showSpinner={false} />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
+            defaultTheme="light"
+            enableSystem={false}
             disableTransitionOnChange
           >
             <div className="relative flex min-h-screen flex-col">
               <Header locale={locale} />
               <main className="flex-1 relative">
-                {/* Background Ambience applied globally */}
-                <div className="absolute inset-x-0 inset-y-0 z-[-1] bg-background pointer-events-none overflow-hidden select-none">
-                  {/* Glowing Orbs */}
-                  <div className="absolute top-0 right-0 w-[50vw] h-[50vw] rounded-full bg-mtozero-cyan/5 blur-[120px] dark:bg-mtozero-cyan/10 translate-x-1/2 -translate-y-1/2"></div>
-                  <div className="absolute bottom-0 left-0 w-[60vw] h-[60vw] rounded-full bg-mtozero-purple/5 blur-[120px] dark:bg-mtozero-purple/10 -translate-x-1/2 translate-y-1/2"></div>
-                  
-                  {/* Branding Watermarks { } */}
-                  <div className={`absolute top-[15%] ${locale === 'ar' ? 'left-[5%]' : 'right-[5%]'} text-[20rem] font-black text-foreground/[0.03] rotate-12 pointer-events-none hidden lg:block`}>
-                    {"{"}
-                  </div>
-                  <div className={`absolute bottom-[10%] ${locale === 'ar' ? 'right-[10%]' : 'left-[10%]'} text-[25rem] font-black text-foreground/[0.02] -rotate-12 pointer-events-none hidden lg:block`}>
-                    {"}"}
-                  </div>
-                  
-                  {/* Subtle Grid / Noise */}
-                  <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.02] brightness-100 contrast-150" />
-                </div>
                 {children}
               </main>
               <Footer locale={locale} />
