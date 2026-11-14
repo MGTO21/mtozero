@@ -17,7 +17,9 @@
     "portfolio": "Portfolio",
     "saas": "SaaS Products",
     "blog": "Blog",
-    "contact": "Contact"
+    "contact": "Contact",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "SEO": {
     "title": "MTOZERO | Mohammed Moatasim - Software Solutions",

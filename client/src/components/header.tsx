@@ -15,11 +15,15 @@ import {
   Ghost, 
   Music,
   MessageCircle,
-  Link as LinkIcon 
+  Menu,
+  X,
+  Link as LinkIcon
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle, LocaleToggle } from "./theme-toggle";
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSocialLinks } from "@/lib/social-links";
 
 // Helper to render icon by name
@@ -52,6 +56,24 @@ const IconRenderer = ({ name, className }: { name: string | null, className?: st
 export function Header({ locale }: { locale: string }) {
   const t = useTranslations("Navigation");
   const { links: socialLinks } = useSocialLinks();
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => setMenuOpen(false), [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  const navLinks = [
+    { href: `/${locale}/services`, label: t("services") },
+    { href: `/${locale}/portfolio`, label: t("portfolio") },
+    { href: `/${locale}/saas`, label: t("saas") },
+    { href: `/${locale}/blog`, label: t("blog") },
+  ];
 
   return (
     <motion.header 
@@ -83,11 +105,10 @@ export function Header({ locale }: { locale: string }) {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <Link href={`/${locale}/services`} className="hover:text-foreground transition-colors">{t("services") ?? "Services"}</Link>
-          <Link href={`/${locale}/portfolio`} className="hover:text-foreground transition-colors">{t("portfolio") ?? "Portfolio"}</Link>
-          <Link href={`/${locale}/saas`} className="hover:text-foreground transition-colors">{t("saas") ?? "SaaS Products"}</Link>
-          <Link href={`/${locale}/blog`} className="hover:text-foreground transition-colors">{t("blog") ?? "Blog"}</Link>
-          <Link href={`/${locale}/contact`} className="text-mtozero-cyan hover:text-mtozero-cyan/80 transition-colors font-bold">{t("contact") ?? "Contact"}</Link>
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="hover:text-foreground transition-colors">{link.label}</Link>
+          ))}
+          <Link href={`/${locale}/contact`} className="text-mtozero-cyan hover:text-mtozero-cyan/80 transition-colors font-bold">{t("contact")}</Link>
         </nav>
 
         {/* Global Controls */}
@@ -117,8 +138,70 @@ export function Header({ locale }: { locale: string }) {
 
           <LocaleToggle currentLocale={locale} />
           <ThemeToggle />
+
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-md border border-border/60 text-foreground hover:bg-muted transition-colors"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="mobile-nav"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden absolute inset-x-0 top-full border-b border-border/40 bg-background shadow-lg"
+          >
+            <nav className="flex flex-col px-4 py-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`rounded-lg px-3 py-3 text-base font-medium transition-colors hover:bg-muted ${
+                    pathname?.startsWith(link.href) ? "text-foreground bg-muted/60" : "text-muted-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link
+                href={`/${locale}/contact`}
+                onClick={() => setMenuOpen(false)}
+                className="mt-2 rounded-lg px-3 py-3 text-base font-bold text-mtozero-cyan hover:bg-muted transition-colors"
+              >
+                {t("contact")}
+              </Link>
+            </nav>
+
+            {socialLinks.length > 0 && (
+              <div className="sm:hidden flex flex-wrap items-center gap-5 border-t border-border/40 px-7 py-4">
+                {socialLinks.map((link) => (
+                  <Link
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    className="text-muted-foreground hover:text-mtozero-cyan transition-colors"
+                    title={link.platform[locale] || link.platform["en"]}
+                  >
+                    <IconRenderer name={link.icon} className="h-5 w-5" />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }
