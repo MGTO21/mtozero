@@ -65,18 +65,33 @@ export function HomeHero({ locale, title, sub, ctaWhatsapp, ctaWork, whatsappHre
         </div>
 
         <motion.figure {...item(3)} className="lg:col-span-7">
-          <Link href={`/${locale}/portfolio/8`} className="block border border-border bg-card">
-            <Image
-              src="/work/edumanager.webp"
-              alt={figCaption}
-              width={1600}
-              height={776}
-              priority
-              sizes="(min-width: 1024px) 58vw, 100vw"
-              className="h-auto w-full"
-            />
-          </Link>
-          <figcaption className="mt-3 flex gap-3 text-sm text-muted-foreground">
+          <div className="relative pe-[14%] sm:pe-[12%]">
+            <Link href={`/${locale}/portfolio/9`} className="block border border-border bg-card">
+              <Image
+                src="/work/ehdaa.webp"
+                alt={figCaption}
+                width={1600}
+                height={776}
+                priority
+                sizes="(min-width: 1024px) 52vw, 88vw"
+                className="h-auto w-full"
+              />
+            </Link>
+            <Link
+              href={`/${locale}/portfolio/4`}
+              className="absolute -bottom-6 end-0 block w-[24%] overflow-hidden rounded-[14px] border-[5px] border-foreground bg-foreground sm:w-[21%]"
+            >
+              <Image
+                src="/work/restaurant.webp"
+                alt=""
+                width={800}
+                height={1778}
+                sizes="(min-width: 1024px) 12vw, 24vw"
+                className="aspect-[9/17] w-full rounded-[9px] object-cover object-top"
+              />
+            </Link>
+          </div>
+          <figcaption className="mt-10 flex gap-3 text-sm text-muted-foreground">
             <span className="fig-label pt-[3px]" dir="ltr">FIG. 01</span>
             <span>{figCaption}</span>
           </figcaption>

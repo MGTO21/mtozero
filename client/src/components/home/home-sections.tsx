@@ -37,10 +37,10 @@ function Fig({ n, caption }: { n: string; caption: string }) {
 }
 
 const WORK = [
-  { id: 7, img: "ecommerce", w: 1600, h: 776, key: "work_ecommerce", span: "lg:col-span-8" },
-  { id: 4, img: "restaurant", w: 800, h: 1778, key: "work_restaurant", span: "lg:col-span-4", tall: true },
-  { id: 5, img: "statcenter", w: 1600, h: 776, key: "work_statcenter", span: "lg:col-span-5" },
-  { id: 9, img: "ehdaa", w: 1600, h: 776, key: "work_ehdaa", span: "lg:col-span-7" },
+  { id: 7, img: "ecommerce", w: 1600, h: 776, key: "work_ecommerce", span: "lg:col-span-7", tall: false },
+  { id: 8, img: "edumanager", w: 1600, h: 776, key: "work_edumanager", span: "lg:col-span-5", tall: false },
+  { id: 5, img: "statcenter", w: 1600, h: 776, key: "work_statcenter", span: "lg:col-span-5", tall: false },
+  { id: 6, img: "barista", w: 1600, h: 776, key: "work_barista", span: "lg:col-span-7", tall: false },
 ];
 
 export function HomeWork({ locale, t }: { locale: string; t: T }) {
