@@ -1,47 +1,28 @@
 "use client";
 
-import { useLocale } from "next-intl";
 import Link from "next/link";
-import { RefreshCcw, Home } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
-export default function Error({
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const locale = useLocale();
-  const isRtl = locale === "ar";
+  const t = useTranslations("Pages");
 
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
-      <span className="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-mtozero-cyan to-mtozero-purple mb-6">
-        {"{ ! }"}
-      </span>
-      <h1 className="text-3xl md:text-4xl font-black mb-4">
-        {isRtl ? "حدث خطأ غير متوقع" : "Something went wrong"}
-      </h1>
-      <p className="text-muted-foreground mb-10 max-w-md">
-        {isRtl
-          ? "نعتذر عن هذا الخلل المؤقت. جرّب إعادة تحميل الصفحة، وإن استمرت المشكلة تواصل معنا."
-          : "We apologize for this temporary glitch. Try reloading the page, and contact us if it persists."}
-      </p>
-      <div className="flex flex-wrap items-center justify-center gap-4">
+    <section className="mx-auto w-full max-w-[1280px] px-4 py-20 md:px-8 md:py-28">
+      <h1 className="max-w-2xl font-display text-[2.1rem] font-extrabold leading-[1.25] text-foreground sm:text-5xl">{t("error_title")}</h1>
+      <p className="mt-5 max-w-xl text-lg font-light text-muted-foreground">{t("error_sub")}</p>
+      <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
         <button
+          type="button"
           onClick={reset}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-mtozero-cyan text-black font-bold hover:scale-105 active:scale-95 transition-transform"
+          className="rounded bg-foreground px-5 py-3 text-[15px] font-semibold text-background transition-colors duration-150 hover:bg-brand"
         >
-          <RefreshCcw className="w-4 h-4" />
-          {isRtl ? "إعادة المحاولة" : "Try again"}
+          {t("error_retry")}
         </button>
-        <Link
-          href={`/${locale}`}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-border font-bold hover:bg-muted transition-colors"
-        >
-          <Home className="w-4 h-4" />
-          {isRtl ? "الصفحة الرئيسية" : "Home"}
+        <Link href={`/${locale}`} className="text-[15px] font-semibold text-foreground underline decoration-border decoration-2 underline-offset-[6px] hover:decoration-brand">
+          {t("notfound_home")}
         </Link>
       </div>
-    </div>
+    </section>
   );
 }

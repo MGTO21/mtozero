@@ -17,17 +17,15 @@ export function FaqSection({ faqs, locale }: { faqs: FaqType[]; locale: "en" | "
   if (faqs.length === 0) return null;
 
   return (
-    <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-      <div className="text-center mb-16">
-        <span className="text-xs font-black uppercase tracking-[0.4em] text-mtozero-cyan">
-          {isRtl ? "أسئلة شائعة" : "FAQ"}
-        </span>
-        <h2 className="text-3xl md:text-5xl font-black mt-4 tracking-tight">
-          {isRtl ? "أسئلة قد تدور في ذهنك" : "Questions You Might Have"}
+    <section className="mx-auto w-full max-w-[1280px] px-4 py-14 md:px-8 lg:py-16">
+      <header className="grid grid-cols-1 gap-3 border-t border-foreground pt-5 lg:grid-cols-12 lg:gap-12">
+        <p className="text-sm font-medium text-foreground lg:col-span-4">{isRtl ? "أسئلة شائعة" : "FAQ"}</p>
+        <h2 className="font-display text-2xl font-bold leading-snug text-foreground md:text-[2rem] lg:col-span-8">
+          {isRtl ? "أسئلة يطرحها العملاء قبل البدء" : "Questions clients ask before we start"}
         </h2>
-      </div>
+      </header>
 
-      <div className="divide-y divide-border/50 border-y border-border/50">
+      <div className="mt-8 divide-y divide-border border-y border-border lg:ms-[33.333%]">
         {faqs.map((faq, index) => {
           const isOpen = openId === faq.id;
           return (
@@ -35,22 +33,20 @@ export function FaqSection({ faqs, locale }: { faqs: FaqType[]; locale: "en" | "
               <button
                 type="button"
                 onClick={() => setOpenId(isOpen ? null : faq.id)}
-                className="w-full flex items-start gap-6 py-8 text-start group"
+                className="group flex w-full items-start gap-5 py-6 text-start"
                 aria-expanded={isOpen}
               >
                 <span
-                  className={`text-4xl md:text-5xl font-black tabular-nums flex-shrink-0 transition-colors duration-300 ${
-                    isOpen ? "text-mtozero-cyan" : "text-foreground/[0.08] group-hover:text-mtozero-cyan/20"
-                  }`}
+                  className={`shrink-0 pt-1 font-mono text-sm ${isOpen ? "text-brand" : "text-muted-foreground"}`} dir="ltr"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="flex-1 pt-1 md:pt-2 font-bold text-lg md:text-xl">
+                <span className="flex-1 font-display text-lg font-bold text-foreground group-hover:text-brand">
                   {faq.question[locale] ?? faq.question.en}
                 </span>
-                <span className="flex-shrink-0 mt-1 md:mt-2 w-8 h-8 rounded-full border border-border/60 flex items-center justify-center">
+                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded border border-border">
                   <Plus
-                    className={`w-4 h-4 text-mtozero-cyan transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}
+                    className={`w-4 h-4 text-foreground transition-transform duration-200 ${isOpen ? "rotate-45" : ""}`}
                   />
                 </span>
               </button>
@@ -63,7 +59,7 @@ export function FaqSection({ faqs, locale }: { faqs: FaqType[]; locale: "en" | "
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <p className="ps-[3.25rem] md:ps-[4rem] pb-8 text-muted-foreground font-light leading-relaxed max-w-2xl">
+                    <p className="max-w-2xl pb-6 ps-10 text-[16px] font-light leading-relaxed text-muted-foreground">
                       {faq.answer[locale] ?? faq.answer.en}
                     </p>
                   </motion.div>

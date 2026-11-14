@@ -1,68 +1,44 @@
 import { getTranslations } from "next-intl/server";
-import { AlertCircle } from "lucide-react";
-import { SaasList } from "@/components/saas-list";
 import { Metadata } from "next";
+import { SaasList } from "@/components/saas-list";
+import { PageHeader, pageWrap } from "@/components/page-header";
 import { getSaasProducts } from "@/lib/content";
 
-
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: "Pages" });
   return {
-    title: locale === 'ar' ? `منصات ساس جاهزة | mtozero` : `Ready-to-Deploy SaaS | mtozero`,
-    description: locale === 'ar' 
-      ? `استعرض منتجات الساس الجاهزة للنشر من mtozero. أنظمة ذكية لإدارة الأعمال والعيادات والمتاجر، مبرمجة بواسطة محمد معتصم.` 
-      : `Browse ready-to-deploy SaaS products from mtozero. Smart systems for business, clinic, and retail management by Mohammed Moatasim.`,
-    alternates: {
-      canonical: `/${locale}/saas`,
-    }
+    title: locale === "ar" ? "منتجاتنا" : "Products",
+    description: t("saas_lede"),
+    alternates: { canonical: `/${locale}/saas` },
   };
 }
 
-async function getProducts() {
-  return getSaasProducts();
-}
-
-export default async function SaasIndexPage({ params: { locale } }: { params: { locale: 'en' | 'ar' } }) {
-  const navT = await getTranslations("Navigation");
-  const products = await getProducts();
-
-  const isRtl = locale === 'ar';
+export default async function SaasIndexPage({ params: { locale } }: { params: { locale: "en" | "ar" } }) {
+  const [nav, t, products] = await Promise.all([
+    getTranslations({ locale, namespace: "Navigation" }),
+    getTranslations({ locale, namespace: "Pages" }),
+    getSaasProducts(),
+  ]);
 
   return (
-    <div className="min-h-[85vh] py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative overflow-hidden">
-      
-      {/* Background Orbs */}
-      <div className="absolute top-20 right-20 w-[30rem] h-[30rem] bg-mtozero-cyan/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-20 left-20 w-[40rem] h-[40rem] bg-mtozero-purple/5 rounded-full blur-[150px] pointer-events-none" />
-
-      {/* Page Header */}
-      <div className="text-center mb-20 relative z-10">
-        <span className="inline-block py-1 px-3 mb-4 rounded-full bg-muted border border-border text-sm font-medium text-muted-foreground">
-           {locale === 'en' ? "Ready-to-Deploy Platforms" : "منصات جاهزة للنشر"}
-        </span>
-        <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">
-          {navT("saas")}
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-light">
-          {locale === 'en' 
-            ? "MTOZERO SaaS Matrix - Mohammed Moatasim signature cloud solutions." 
-            : "مصفوفة ساس mtozero - أنظمة سحابية متكاملة من ابتكار محمد معتصم."}
-        </p>
-      </div>
-
-      {products.length > 0 ? (
-        <SaasList 
-          products={products} 
-          locale={locale} 
-          translations={{
-            customPricing: isRtl ? 'تسعير مخصص' : 'Custom Pricing'
-          }}
-        />
-      ) : (
-        <div className="col-span-full py-20 text-center">
-            <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
-            <p className="text-xl font-medium">{isRtl ? 'عذراً، لم نتمكن من العثور على أي منتجات حالياً' : 'Sorry, we couldn\'t find any products right now'}</p>
-        </div>
-      )}
-    </div>
+    <>
+      <PageHeader eyebrow={nav("saas")} title={t("saas_title")} lede={t("saas_lede")} />
+      <section className={`${pageWrap} pb-20`}>
+        {products.length > 0 ? (
+          <SaasList
+            products={products}
+            locale={locale}
+            labels={{
+              demo: t("saas_demo"),
+              ask: t("saas_ask"),
+              details: t("saas_details"),
+              wa: (name) => t("saas_wa", { name }),
+            }}
+          />
+        ) : (
+          <p className="border-t border-foreground py-10 text-muted-foreground">{t("saas_empty")}</p>
+        )}
+      </section>
+    </>
   );
 }

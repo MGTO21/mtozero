@@ -1,41 +1,45 @@
+import { getTranslations } from "next-intl/server";
 import { Metadata } from "next";
 import { QuoteRequestForm } from "@/components/quote-request-form";
+import { PageHeader, pageWrap } from "@/components/page-header";
+import { whatsappLink } from "@/lib/whatsapp";
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: "Pages" });
   return {
-    title: locale === "ar" ? "اطلب عرض سعر" : "Request a Quote",
-    description:
-      locale === "ar"
-        ? "أخبرنا عن مشروعك واحصل على عرض سعر مخصص من فريق MTOZERO خلال 24 ساعة."
-        : "Tell us about your project and get a tailored quote from the MTOZERO team within 24 hours.",
-    alternates: {
-      canonical: `/${locale}/quote`,
-    },
+    title: locale === "ar" ? "اطلب عرض سعر" : "Request a quote",
+    description: t("quote_lede"),
+    alternates: { canonical: `/${locale}/quote` },
   };
 }
 
-export default function QuotePage({ params: { locale } }: { params: { locale: "en" | "ar" } }) {
-  const isRtl = locale === "ar";
+export default async function QuotePage({ params: { locale } }: { params: { locale: "en" | "ar" } }) {
+  const [t, home] = await Promise.all([
+    getTranslations({ locale, namespace: "Pages" }),
+    getTranslations({ locale, namespace: "Home" }),
+  ]);
+  const wa = whatsappLink(home("wa_general"));
 
   return (
-    <div className="min-h-screen py-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto relative overflow-hidden">
-      <div className="absolute top-32 left-0 w-96 h-96 bg-mtozero-cyan/10 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-20 right-0 w-96 h-96 bg-mtozero-purple/10 rounded-full blur-[130px] pointer-events-none" />
-
-      <div className="relative z-10">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">
-            {isRtl ? "اطلب عرض سعر" : "Request a Quote"}
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-light">
-            {isRtl
-              ? "أخبرنا عن مشروعك بالتفصيل وسنعود إليك بعرض سعر مخصص خلال 24 ساعة."
-              : "Tell us about your project in detail and we'll get back to you with a tailored quote within 24 hours."}
-          </p>
+    <>
+      <PageHeader eyebrow={t("contact_quote_link")} title={t("quote_title")} lede={t("quote_lede")} />
+      <section className={`${pageWrap} pb-20`}>
+        <div className="grid grid-cols-1 gap-8 border-t border-foreground pt-10 lg:grid-cols-12 lg:gap-12">
+          <aside className="lg:col-span-4">
+            {wa && (
+              <p className="text-[15px] text-muted-foreground">
+                {t("quote_or_wa")}{" "}
+                <a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand hover:underline underline-offset-4">
+                  {t("quote_wa_link")}
+                </a>
+              </p>
+            )}
+          </aside>
+          <div className="lg:col-span-8">
+            <QuoteRequestForm locale={locale} />
+          </div>
         </div>
-
-        <QuoteRequestForm locale={locale} />
-      </div>
-    </div>
+      </section>
+    </>
   );
 }

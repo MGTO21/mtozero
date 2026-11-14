@@ -1,68 +1,55 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { MoveRight, MoveLeft, Database } from "lucide-react";
 import Link from "next/link";
+import { ArrowUpLeft, ArrowUpRight } from "lucide-react";
+import { pick, type Tr } from "@/lib/format";
+import { whatsappLink } from "@/lib/whatsapp";
 
-interface SaasProductType {
-  id: number;
+export interface SaasProduct {
+  id: string | number;
   slug: string;
-  name: Record<string, string>;
-  description: Record<string, string>;
-  pricing: Record<string, string> | null;
+  name: Tr;
+  description: Tr;
+  url?: string | null;
 }
 
-export function SaasList({ 
-  products, 
+export function SaasList({
+  products,
   locale,
-  translations 
-}: { 
-  products: SaasProductType[]; 
-  locale: 'en' | 'ar';
-  translations: {
-    customPricing: string;
-  }
+  labels,
+}: {
+  products: SaasProduct[];
+  locale: "en" | "ar";
+  labels: { demo: string; ask: string; details: string; wa: (name: string) => string };
 }) {
-  const isRtl = locale === 'ar';
-  const ArrowIcon = isRtl ? MoveLeft : MoveRight;
-
+  const External = locale === "ar" ? ArrowUpLeft : ArrowUpRight;
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-      {products.map((product) => (
-        <Link href={`/${locale}/saas/${product.slug}`} key={product.id}>
-          <motion.div
-            className="group h-full p-8 md:p-10 rounded-3xl bg-card border border-border hover:border-mtozero-purple/40 transition-all duration-300 relative overflow-hidden flex flex-col"
-          >
-            {/* Card Hover Ambience */}
-            <div className="absolute inset-0 bg-gradient-to-br from-mtozero-purple/0 to-mtozero-cyan/0 group-hover:from-mtozero-purple/5 group-hover:to-mtozero-cyan/5 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-            
-            <div className="relative z-10 flex-1">
-              <div className="mb-8 w-16 h-16 rounded-2xl bg-foreground/5 flex items-center justify-center group-hover:bg-mtozero-purple/10 transition-colors duration-300">
-                <Database className="w-8 h-8 text-foreground group-hover:text-mtozero-purple transition-colors duration-300" />
-              </div>
-              
-              <h3 className="text-3xl font-bold mb-4 tracking-tight group-hover:text-mtozero-purple transition-colors duration-300">
-                {product.name[locale] || product.name[locale === 'ar' ? 'en' : 'ar']}
-              </h3>
-              
-              <p className="text-muted-foreground leading-relaxed text-lg mb-8 line-clamp-3">
-                {product.description[locale] || product.description[locale === 'ar' ? 'en' : 'ar']}
-              </p>
+    <div className="border-t border-foreground">
+      {products.map((p, i) => {
+        const name = pick(p.name, locale);
+        const wa = whatsappLink(labels.wa(name));
+        return (
+          <article key={p.id} className="grid grid-cols-1 gap-4 border-b border-border py-10 lg:grid-cols-12 lg:gap-12">
+            <span className="font-mono text-sm text-muted-foreground lg:col-span-1" dir="ltr">{String(i + 1).padStart(2, "0")}</span>
+            <div className="lg:col-span-7">
+              <h2 className="font-display text-2xl font-bold text-foreground md:text-3xl">
+                <Link href={`/${locale}/saas/${p.slug}`} className="hover:text-brand transition-colors duration-150">{name}</Link>
+              </h2>
+              <p className="mt-3 text-[17px] font-light leading-relaxed text-muted-foreground">{pick(p.description, locale)}</p>
             </div>
-
-            {/* Card Footer */}
-            <div className="relative z-10 pt-6 border-t border-border/50 flex items-center justify-between mt-auto">
-              <span className="font-semibold text-mtozero-cyan font-mono">
-                {product.pricing?.[locale] || product.pricing?.['en'] || translations.customPricing}
-              </span>
-              
-              <div className="w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center group-hover:scale-110 group-hover:rotate-[-5deg] transition-all duration-300 shadow-xl">
-                <ArrowIcon className="w-5 h-5" />
-              </div>
+            <div className="flex flex-wrap items-start gap-x-5 gap-y-2 text-[15px] font-semibold lg:col-span-4 lg:flex-col lg:items-end">
+              {p.url && (
+                <a href={p.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-brand underline-offset-[6px] hover:underline">
+                  {labels.demo}
+                  <External className="h-4 w-4" />
+                </a>
+              )}
+              <Link href={`/${locale}/saas/${p.slug}`} className="text-foreground hover:text-brand transition-colors duration-150">{labels.details}</Link>
+              {wa && (
+                <a href={wa} target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-brand transition-colors duration-150">{labels.ask}</a>
+              )}
             </div>
-          </motion.div>
-        </Link>
-      ))}
+          </article>
+        );
+      })}
     </div>
   );
 }

@@ -126,7 +126,7 @@ export function Header({ locale }: { locale: string }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden absolute inset-x-0 top-full border-b border-border/40 bg-background shadow-lg"
+            className="md:hidden absolute inset-x-0 top-full border-b border-border bg-background"
           >
             <nav className="flex flex-col px-4 py-3">
               {navLinks.map((link) => (
@@ -134,7 +134,7 @@ export function Header({ locale }: { locale: string }) {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`rounded-lg px-3 py-3 text-base font-medium transition-colors hover:bg-muted ${
+                  className={`rounded px-3 py-3 text-base font-medium transition-colors hover:bg-muted ${
                     pathname?.startsWith(link.href) ? "text-foreground bg-muted/60" : "text-muted-foreground"
                   }`}
                 >
@@ -144,7 +144,7 @@ export function Header({ locale }: { locale: string }) {
               <Link
                 href={`/${locale}/contact`}
                 onClick={() => setMenuOpen(false)}
-                className="mt-2 rounded-lg px-3 py-3 text-base font-bold text-mtozero-cyan hover:bg-muted transition-colors"
+                className="mt-2 rounded px-3 py-3 text-base font-semibold text-brand hover:bg-muted transition-colors"
               >
                 {t("contact")}
               </Link>
@@ -157,7 +157,7 @@ export function Header({ locale }: { locale: string }) {
                     key={link.id}
                     href={link.url}
                     target="_blank"
-                    className="text-muted-foreground hover:text-mtozero-cyan transition-colors"
+                    className="text-muted-foreground hover:text-brand transition-colors"
                     title={link.platform[locale] || link.platform["en"]}
                   >
                     <IconRenderer name={link.icon} className="h-5 w-5" />

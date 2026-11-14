@@ -106,7 +106,9 @@ const byField = (f: string) => (a: Doc, b: Doc) => (a[f] ?? 0) - (b[f] ?? 0);
 export const getServices = async () => (await listVisible("services")).sort(byCreatedAsc);
 export const getService = (id: string) => getVisible("services", id);
 
-export const getPortfolio = async () => (await listVisible("portfolio_projects")).sort(byCreatedDesc);
+// Projects flagged "featured" in the admin lead the portfolio, newest first within each group.
+export const getPortfolio = async () =>
+  (await listVisible("portfolio_projects")).sort((a, b) => Number(!!b.featured) - Number(!!a.featured) || byCreatedDesc(a, b));
 export const getPortfolioProject = (id: string) => getVisible("portfolio_projects", id);
 
 export const getSaasProducts = async () => (await listVisible("saas_products")).sort(byCreatedAsc);

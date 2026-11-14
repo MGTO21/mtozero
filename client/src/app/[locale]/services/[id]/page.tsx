@@ -1,193 +1,93 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, ChevronLeft } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { pageWrap } from "@/components/page-header";
+import { SafeHtml } from "@/components/safe-html";
+import { HomeCta } from "@/components/home/home-sections";
+import { getService } from "@/lib/content";
+import { excerpt, pick } from "@/lib/format";
+import { whatsappLink } from "@/lib/whatsapp";
 
-interface ServiceType {
-  id: number;
-  icon: string;
-  title: Record<string, string>;
-  description: Record<string, string>;
-  content: Record<string, string>;
-  features: Record<string, { item: string }[] | null>;
+type Feature = string | { item?: string };
+
+function features(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return (value as Feature[]).map((f) => (typeof f === "string" ? f : f?.item ?? "")).filter(Boolean);
 }
 
-const API_URL = "/api";
+export async function generateMetadata({ params: { locale, id } }: { params: { locale: string; id: string } }): Promise<Metadata> {
+  const service = await getService(id);
+  if (!service) return {};
+  return {
+    title: pick(service.title, locale),
+    description: excerpt(pick(service.description, locale), 160),
+    alternates: { canonical: `/${locale}/services/${id}` },
+  };
+}
 
-export default function ServiceDetail() {
-  const t = useTranslations("Navigation");
-  const params = useParams();
-  const locale = params.locale as 'en' | 'ar';
-  const id = params.id as string;
-  
-  const [service, setService] = useState<ServiceType | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [safeContent, setSafeContent] = useState("");
+export default async function ServiceDetail({ params: { locale, id } }: { params: { locale: "en" | "ar"; id: string } }) {
+  const [service, t, home] = await Promise.all([
+    getService(id),
+    getTranslations({ locale, namespace: "Pages" }),
+    getTranslations({ locale, namespace: "Home" }),
+  ]);
+  if (!service) notFound();
 
-  const isRtl = locale === 'ar';
-  const BackIcon = isRtl ? ArrowRight : ArrowLeft;
-  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
-
-  useEffect(() => {
-    fetch(`${API_URL}/services/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Service not found");
-        return res.json();
-      })
-      .then(data => {
-        setService(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, [id]);
-
-  useEffect(() => {
-    const rawContent = service?.content?.[locale] || service?.content?.[locale === 'ar' ? 'en' : 'ar'] || '';
-    if (!rawContent) {
-      setSafeContent('');
-      return;
-    }
-    import('dompurify').then(({ default: DOMPurify }) => {
-      setSafeContent(DOMPurify.sanitize(rawContent));
-    });
-  }, [service, locale]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-16 h-16 border-4 border-mtozero-cyan/30 border-t-mtozero-cyan rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  if (!service) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center px-4 bg-background">
-        <h1 className="text-4xl font-bold mb-4">{isRtl ? 'الخدمة غير موجودة' : 'Service Not Found'}</h1>
-        <Link href={`/${locale}/services`} className="text-mtozero-cyan hover:underline flex items-center gap-2">
-          <BackIcon className="w-4 h-4" />
-          {isRtl ? 'العودة للخدمات' : 'Back to Services'}
-        </Link>
-      </div>
-    );
-  }
-
-  const title = service.title[locale] || service.title[locale === 'ar' ? 'en' : 'ar'] || (isRtl ? 'خدمة بدون عنوان' : 'Untitled Service');
-  const description = service.description[locale] || service.description[locale === 'ar' ? 'en' : 'ar'];
-  const content = safeContent;
-  const rawFeatures = service.features?.[locale] || service.features?.[locale === 'ar' ? 'en' : 'ar'] || [];
-  const features = Array.isArray(rawFeatures) ? rawFeatures : [];
+  const other = locale === "ar" ? "en" : "ar";
+  const title = pick(service.title, locale);
+  const description = pick(service.description, locale);
+  const content: string = service.content?.[locale] || service.content?.[other] || "";
+  const list = features(service.features?.[locale]).length ? features(service.features?.[locale]) : features(service.features?.[other]);
+  const wa = whatsappLink(t("service_wa", { name: title }));
+  const Back = locale === "ar" ? ArrowRight : ArrowLeft;
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      
-      {/* Background Ambience */}
-      <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-mtozero-cyan/5 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[40rem] h-[40rem] bg-mtozero-purple/5 rounded-full blur-[150px] pointer-events-none" />
+    <>
+      <article className={`${pageWrap} pb-20 pt-10`}>
+        <Link href={`/${locale}/services`} className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground">
+          <Back className="h-4 w-4" />
+          {t("service_back")}
+        </Link>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        
-        {/* Back Button */}
-        <motion.div 
-          className="mb-12"
-        >
-          <Link 
-            href={`/${locale}/services`} 
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-mtozero-cyan transition-colors group"
-          >
-            <BackIcon className={`w-5 h-5 transition-transform ${isRtl ? 'group-hover:translate-x-1' : 'group-hover:-translate-x-1'}`} />
-            <span className="font-medium">{t("services") || (isRtl ? "الخدمات" : "Services")}</span>
-          </Link>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          
-          {/* Left Column: Info */}
-          <div className="lg:col-span-12">
-            <motion.div
-            >
-              <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-foreground">
-                {title}
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground font-light mb-12 max-w-4xl leading-relaxed">
-                {description}
-              </p>
-            </motion.div>
-
-            {/* Content & Features Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-10">
-              
-              {/* Detailed Content */}
-              <motion.div 
-                className="space-y-6"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                   <div className="w-10 h-1 h-px bg-mtozero-cyan" />
-                   <h2 className="text-2xl font-bold uppercase tracking-wider">{isRtl ? 'نظرة عامة' : 'Overview'}</h2>
-                </div>
-                <div 
-                  className="prose prose-lg dark:prose-invert max-w-none text-foreground/80 leading-relaxed font-light"
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
-              </motion.div>
-
-              {/* Key Features List */}
-              <motion.div
-                className="bg-card/30 rounded-3xl p-8 border border-border/50 backdrop-blur-sm self-start"
-              >
-                <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-mtozero-cyan shadow-[0_0_10px_rgba(0,240,255,0.5)]" />
-                  {isRtl ? 'المميزات الرئيسية' : 'Key Features'}
-                </h2>
-                <div className="space-y-4">
-                  {features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-4 p-4 rounded-2xl bg-muted/30 border border-transparent hover:border-mtozero-cyan/20 transition-all">
-                      <CheckCircle2 className="w-6 h-6 text-mtozero-cyan flex-shrink-0 mt-0.5" />
-                      <span className="text-lg font-medium">{feature.item}</span>
-                    </div>
-                  ))}
-                  {features.length === 0 && (
-                     <p className="text-muted-foreground italic">{isRtl ? 'لا توجد مميزات مسجلة حالياً.' : 'No features recorded yet.'}</p>
-                  )}
-                </div>
-              </motion.div>
-
-            </div>
+        <header className="mt-8 grid grid-cols-1 gap-6 border-b border-border pb-10 lg:grid-cols-12 lg:gap-12">
+          <h1 className="font-display text-[2.1rem] font-extrabold leading-[1.25] text-foreground sm:text-5xl lg:col-span-7">{title}</h1>
+          <div className="lg:col-span-5 lg:self-end">
+            {description && <p className="text-lg font-light leading-relaxed text-muted-foreground">{description}</p>}
+            {wa && (
+              <a href={wa} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex rounded bg-foreground px-4 py-2.5 text-[15px] font-semibold text-background transition-colors duration-150 hover:bg-brand">
+                {home("cta_whatsapp")}
+              </a>
+            )}
           </div>
+        </header>
+
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-12">
+          {content && (
+            <section className="lg:col-span-7">
+              <h2 className="text-sm font-medium text-foreground">{t("service_overview")}</h2>
+              <SafeHtml html={content} className="rich mt-4 text-[17px] text-foreground/85" />
+            </section>
+          )}
+          <section className={content ? "lg:col-span-5" : "lg:col-span-8"}>
+            <h2 className="text-sm font-medium text-foreground">{t("service_features")}</h2>
+            {list.length > 0 ? (
+              <ol className="mt-4 border-t border-border">
+                {list.map((f, i) => (
+                  <li key={i} className="flex gap-4 border-b border-border py-4 text-[17px] text-foreground">
+                    <span className="font-mono text-sm text-brand pt-1" dir="ltr">{String(i + 1).padStart(2, "0")}</span>
+                    {f}
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="mt-4 text-muted-foreground">{t("service_no_features")}</p>
+            )}
+          </section>
         </div>
-
-        {/* CTA Section */}
-        <motion.div
-          className="mt-20 p-12 rounded-[2.5rem] bg-gradient-to-br from-mtozero-cyan/10 via-background to-mtozero-purple/10 border border-mtozero-cyan/20 text-center relative overflow-hidden"
-        >
-          <div className="absolute -top-24 -left-24 w-64 h-64 bg-mtozero-cyan/10 rounded-full blur-3xl" />
-          <div className="relative z-10">
-            <h3 className="text-3xl md:text-4xl font-bold mb-6">
-              {isRtl ? 'هل أنت جاهز لبدء مشروعك؟' : 'Ready to start your project?'}
-            </h3>
-            <p className="text-muted-foreground mb-10 max-w-xl mx-auto">
-              {isRtl 
-                ? 'تواصل معنا اليوم لمناقشة كيف يمكننا تحويل رؤيتك الرقمية إلى واقع ملموس.' 
-                : 'Contact us today to discuss how we can transform your digital vision into reality.'}
-            </p>
-            <Link
-              href={`/${locale}/contact`}
-              className="inline-flex items-center gap-3 px-10 py-5 bg-mtozero-cyan text-black font-black rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-mtozero-cyan/40"
-            >
-              {isRtl ? 'تواصل معنا' : 'Contact Us'}
-              <NextIcon className="w-5 h-5" />
-            </Link>
-          </div>
-        </motion.div>
-
-      </main>
-    </div>
+      </article>
+      <HomeCta locale={locale} t={home} />
+    </>
   );
 }

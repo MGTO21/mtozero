@@ -139,11 +139,11 @@ export function HomeServices({ locale, t, services }: { locale: string; t: T; se
   );
 }
 
-export function HomeProcess({ t }: { t: T }) {
+export function HomeProcess({ t, n = "05" }: { t: T; n?: string }) {
   const steps = [1, 2, 3, 4];
   return (
     <section className={`${wrap} py-14 lg:py-16`}>
-      <SectionHead n="05" index={t("process_index")} title={t("process_title")} />
+      <SectionHead n={n} index={t("process_index")} title={t("process_title")} />
       <ol className="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((n) => (
           <li key={n} className="border-t border-border pt-5">

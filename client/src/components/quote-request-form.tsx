@@ -1,11 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
-
-const API_URL = "/api";
+import { Field, FormStatus, SubmitButton, inputCls } from "@/components/form-fields";
 
 type Status = "idle" | "sending" | "success" | "error";
+
+const projectTypes = [
+  { value: "website", ar: "موقع إلكتروني", en: "Website" },
+  { value: "web_app", ar: "نظام ويب", en: "Web system" },
+  { value: "mobile_app", ar: "تطبيق جوال", en: "Mobile app" },
+  { value: "saas", ar: "منتج SaaS", en: "SaaS product" },
+  { value: "other", ar: "أخرى", en: "Other" },
+];
+
+const budgets = [
+  { value: "under_1k", ar: "أقل من 1,000$", en: "Under $1,000" },
+  { value: "1k_5k", ar: "1,000$ – 5,000$", en: "$1,000 – $5,000" },
+  { value: "5k_15k", ar: "5,000$ – 15,000$", en: "$5,000 – $15,000" },
+  { value: "over_15k", ar: "أكثر من 15,000$", en: "Over $15,000" },
+];
+
+const timelines = [
+  { value: "asap", ar: "بأسرع وقت", en: "As soon as possible" },
+  { value: "1_3_months", ar: "1 – 3 أشهر", en: "1 – 3 months" },
+  { value: "3_6_months", ar: "3 – 6 أشهر", en: "3 – 6 months" },
+  { value: "flexible", ar: "مرنة", en: "Flexible" },
+];
 
 export function QuoteRequestForm({ locale }: { locale: string }) {
   const isRtl = locale === "ar";
@@ -18,7 +38,7 @@ export function QuoteRequestForm({ locale }: { locale: string }) {
 
     setStatus("sending");
     try {
-      const res = await fetch(`${API_URL}/quote-requests`, {
+      const res = await fetch("/api/quote-requests", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(data),
@@ -32,121 +52,61 @@ export function QuoteRequestForm({ locale }: { locale: string }) {
     }
   }
 
-  const labels = {
+  const l = {
     name: isRtl ? "الاسم" : "Name",
     email: isRtl ? "البريد الإلكتروني" : "Email",
-    phone: isRtl ? "رقم الهاتف" : "Phone",
-    projectType: isRtl ? "نوع المشروع" : "Project Type",
-    budget: isRtl ? "الميزانية التقديرية" : "Estimated Budget",
-    timeline: isRtl ? "المدة الزمنية المطلوبة" : "Desired Timeline",
-    details: isRtl ? "أخبرنا عن مشروعك" : "Tell us about your project",
-    send: isRtl ? "أرسل الطلب" : "Send Request",
-    sending: isRtl ? "جارٍ الإرسال..." : "Sending...",
-    success: isRtl
-      ? "وصل طلبك بنجاح! سنرسل لك عرض السعر خلال 24 ساعة."
-      : "Request received! We'll send you a quote within 24 hours.",
-    error: isRtl
-      ? "تعذر الإرسال. جرّب مرة أخرى أو راسلنا عبر واتساب."
-      : "Couldn't send. Try again or reach us on WhatsApp.",
+    phone: isRtl ? "رقم الهاتف أو واتساب" : "Phone or WhatsApp",
+    projectType: isRtl ? "نوع المشروع" : "Project type",
+    budget: isRtl ? "الميزانية التقديرية" : "Estimated budget",
+    timeline: isRtl ? "المدة المطلوبة" : "Timeline",
+    details: isRtl ? "صف مشروعك: من سيستخدمه، وما المشكلة التي يحلها" : "Describe the project: who will use it and what problem it solves",
+    choose: isRtl ? "اختر" : "Choose",
+    send: isRtl ? "أرسل الطلب" : "Send request",
+    sending: isRtl ? "جارٍ الإرسال…" : "Sending…",
+    success: isRtl ? "وصل طلبك. سنرسل لك تقديراً مبدئياً خلال 24 ساعة." : "Request received. We'll send a first estimate within 24 hours.",
+    error: isRtl ? "تعذّر الإرسال. جرّب مرة أخرى أو راسلنا على واتساب." : "Couldn't send. Try again or message us on WhatsApp.",
   };
 
-  const projectTypes = [
-    { value: "website", ar: "موقع إلكتروني", en: "Website" },
-    { value: "web_app", ar: "تطبيق ويب", en: "Web Application" },
-    { value: "mobile_app", ar: "تطبيق جوال", en: "Mobile App" },
-    { value: "saas", ar: "منتج SaaS", en: "SaaS Product" },
-    { value: "other", ar: "أخرى", en: "Other" },
-  ];
-
-  const budgets = [
-    { value: "under_1k", ar: "أقل من 1000$", en: "Under $1,000" },
-    { value: "1k_5k", ar: "1,000$ - 5,000$", en: "$1,000 - $5,000" },
-    { value: "5k_15k", ar: "5,000$ - 15,000$", en: "$5,000 - $15,000" },
-    { value: "over_15k", ar: "أكثر من 15,000$", en: "Over $15,000" },
-  ];
-
-  const timelines = [
-    { value: "asap", ar: "بأسرع وقت ممكن", en: "As soon as possible" },
-    { value: "1_3_months", ar: "1 - 3 أشهر", en: "1 - 3 months" },
-    { value: "3_6_months", ar: "3 - 6 أشهر", en: "3 - 6 months" },
-    { value: "flexible", ar: "مرنة", en: "Flexible" },
-  ];
-
-  const inputCls =
-    "w-full px-5 py-4 rounded-2xl bg-muted/30 border border-border/60 focus:border-mtozero-cyan/60 focus:ring-2 focus:ring-mtozero-cyan/20 outline-none transition-all placeholder:text-muted-foreground/60";
+  const label = (o: { ar: string; en: string }) => (isRtl ? o.ar : o.en);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-8 md:p-12 rounded-[2rem] bg-card/40 border border-border/60 backdrop-blur-sm space-y-6"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <input name="name" required maxLength={255} placeholder={labels.name} className={inputCls} />
-        <input name="email" type="email" required maxLength={255} placeholder={labels.email} className={inputCls} />
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <Field label={l.name} htmlFor="q-name" required>
+          <input id="q-name" name="name" required maxLength={255} autoComplete="name" className={inputCls} />
+        </Field>
+        <Field label={l.email} htmlFor="q-email" required>
+          <input id="q-email" name="email" type="email" required maxLength={255} autoComplete="email" dir="ltr" className={inputCls} />
+        </Field>
       </div>
-      <input name="phone" maxLength={50} placeholder={labels.phone} className={inputCls} />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <select name="project_type" required defaultValue="" className={inputCls}>
-          <option value="" disabled>
-            {labels.projectType}
-          </option>
-          {projectTypes.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {isRtl ? opt.ar : opt.en}
-            </option>
-          ))}
-        </select>
-        <select name="budget" defaultValue="" className={inputCls}>
-          <option value="">{labels.budget}</option>
-          {budgets.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {isRtl ? opt.ar : opt.en}
-            </option>
-          ))}
-        </select>
-        <select name="timeline" defaultValue="" className={inputCls}>
-          <option value="">{labels.timeline}</option>
-          {timelines.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {isRtl ? opt.ar : opt.en}
-            </option>
-          ))}
-        </select>
+      <Field label={l.phone} htmlFor="q-phone">
+        <input id="q-phone" name="phone" type="tel" maxLength={50} autoComplete="tel" dir="ltr" className={inputCls} />
+      </Field>
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+        <Field label={l.projectType} htmlFor="q-type" required>
+          <select id="q-type" name="project_type" required defaultValue="" className={inputCls}>
+            <option value="" disabled>{l.choose}</option>
+            {projectTypes.map((o) => <option key={o.value} value={o.value}>{label(o)}</option>)}
+          </select>
+        </Field>
+        <Field label={l.budget} htmlFor="q-budget">
+          <select id="q-budget" name="budget" defaultValue="" className={inputCls}>
+            <option value="">{l.choose}</option>
+            {budgets.map((o) => <option key={o.value} value={o.value}>{label(o)}</option>)}
+          </select>
+        </Field>
+        <Field label={l.timeline} htmlFor="q-timeline">
+          <select id="q-timeline" name="timeline" defaultValue="" className={inputCls}>
+            <option value="">{l.choose}</option>
+            {timelines.map((o) => <option key={o.value} value={o.value}>{label(o)}</option>)}
+          </select>
+        </Field>
       </div>
-
-      <textarea name="details" required maxLength={5000} rows={6} placeholder={labels.details} className={`${inputCls} resize-none`} />
-
-      <button
-        type="submit"
-        disabled={status === "sending"}
-        className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-12 py-5 rounded-full bg-mtozero-cyan text-black font-black uppercase tracking-widest text-sm hover:scale-[1.03] active:scale-95 transition-transform disabled:opacity-60 disabled:hover:scale-100"
-      >
-        {status === "sending" ? (
-          <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            {labels.sending}
-          </>
-        ) : (
-          <>
-            <Send className="w-5 h-5" />
-            {labels.send}
-          </>
-        )}
-      </button>
-
-      {status === "success" && (
-        <p className="flex items-center gap-3 text-green-500 font-medium" role="status">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-          {labels.success}
-        </p>
-      )}
-      {status === "error" && (
-        <p className="flex items-center gap-3 text-destructive font-medium" role="alert">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
-          {labels.error}
-        </p>
-      )}
+      <Field label={l.details} htmlFor="q-details" required>
+        <textarea id="q-details" name="details" required maxLength={5000} rows={7} className={`${inputCls} resize-y`} />
+      </Field>
+      <SubmitButton sending={status === "sending"} label={l.send} sendingLabel={l.sending} />
+      <FormStatus status={status} success={l.success} error={l.error} />
     </form>
   );
 }

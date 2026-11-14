@@ -102,6 +102,47 @@
 }
 
 @layer components {
+  /* Admin-authored HTML and long-form article text. */
+  .rich {
+    line-height: 1.9;
+  }
+  .rich > * + * {
+    margin-top: 1.1em;
+  }
+  .rich h2,
+  .rich h3 {
+    @apply font-display font-bold text-foreground;
+    line-height: 1.4;
+    margin-top: 1.8em;
+  }
+  .rich h2 {
+    font-size: 1.45em;
+  }
+  .rich h3 {
+    font-size: 1.2em;
+  }
+  .rich a {
+    @apply text-brand underline underline-offset-4;
+  }
+  .rich ul {
+    @apply list-disc ps-6;
+  }
+  .rich ol {
+    @apply list-decimal ps-6;
+  }
+  .rich li + li {
+    margin-top: 0.4em;
+  }
+  .rich blockquote {
+    @apply border-s-2 border-brand ps-5 text-muted-foreground;
+  }
+  .rich img {
+    @apply border border-border;
+  }
+  .rich code {
+    @apply font-mono text-[0.9em];
+  }
+
   .fig-label {
     @apply font-mono text-[11px] uppercase text-muted-foreground;
     letter-spacing: 0.08em;
