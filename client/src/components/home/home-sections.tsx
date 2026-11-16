@@ -187,6 +187,39 @@ export function HomeTestimonial({ locale, t, testimonials }: { locale: string; t
   );
 }
 
+export function HomeFounder({ t }: { t: T }) {
+  return (
+    <section className={`${wrap} py-14 lg:py-16`}>
+      <div className="grid grid-cols-1 gap-8 border-t border-foreground pt-5 lg:grid-cols-12 lg:gap-12">
+        <p className="flex items-baseline gap-3 text-sm font-medium text-foreground lg:col-span-4">
+          <span className="font-mono text-xs text-muted-foreground" dir="ltr">07</span>
+          {t("founder_index")}
+        </p>
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-[minmax(0,15rem)_1fr] lg:col-span-8">
+          <figure className="border border-border bg-card">
+            <Image src="/team/mohammed.webp" alt={t("founder_photo_alt")} width={674} height={780} sizes="(min-width: 640px) 15rem, 100vw" className="h-auto w-full" />
+          </figure>
+          <div>
+            <h3 className="font-display text-2xl font-bold text-foreground">{t("founder_name")}</h3>
+            <p className="mt-1 text-[15px] text-muted-foreground">{t("founder_role")}</p>
+            <p className="mt-6 text-[17px] font-light leading-relaxed text-foreground/85">{t("founder_bio_1")}</p>
+            <p className="mt-4 text-[17px] font-light leading-relaxed text-foreground/85">{t("founder_bio_2")}</p>
+            <a
+              href="https://github.com/MGTO21"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-block font-mono text-sm text-brand hover:underline underline-offset-4"
+              dir="ltr"
+            >
+              github.com/MGTO21
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function HomeCta({ locale, t }: { locale: string; t: T }) {
   const Forward = locale === "ar" ? ArrowLeft : ArrowRight;
   const wa = whatsappLink(t("wa_general"));

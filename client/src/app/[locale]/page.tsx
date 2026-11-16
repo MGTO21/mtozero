@@ -3,6 +3,7 @@ import { FaqSection } from "@/components/faq-section";
 import { HomeHero } from "@/components/home/home-hero";
 import {
   HomeCta,
+  HomeFounder,
   HomeProcess,
   HomeProducts,
   HomeServices,
@@ -42,6 +43,7 @@ export default async function Home({ params: { locale } }: { params: { locale: "
       <HomeServices locale={locale} t={t} services={services} />
       <HomeProcess t={t} />
       <HomeTestimonial locale={locale} t={t} testimonials={testimonials} />
+      <HomeFounder t={t} />
       {faqs.length > 0 && <FaqSection faqs={faqs} locale={locale} />}
       <HomeCta locale={locale} t={t} />
     </>
