@@ -7,6 +7,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { WhatsappButton } from "@/components/whatsapp-button";
 import NextTopLoader from 'nextjs-toploader';
+import { getSocialLinks } from "@/lib/content";
 import "../globals.css";
 
 const display = Alexandria({
@@ -77,7 +78,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
           url: "/og-image.png",
           width: 1200,
           height: 630,
-          alt: "MTOZERO — Smart Digital Solutions",
+          alt: "MTOZERO — software studio, El Obeid, Sudan",
         },
       ],
       locale: locale === "ar" ? "ar_SA" : "en_US",
@@ -115,20 +116,25 @@ export default async function RootLayout({
   const dir = locale === "ar" ? "rtl" : "ltr";
   const fontClass = `font-sans ${display.variable} ${body.variable} ${mono.variable}`;
 
+  const [seo, socialLinks] = await Promise.all([getTranslations({ locale, namespace: "SEO" }), getSocialLinks()]);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "MTOZERO",
-    "url": "https://mtozero.com",
-    "logo": "https://mtozero.com/logo.jpeg",
-    "sameAs": [
-      "https://github.com/MGTO21",
-    ],
-    "founder": {
+    name: "MTOZERO",
+    url: "https://mtozero.com",
+    logo: "https://mtozero.com/logo.jpeg",
+    description: seo("description"),
+    email: "mtozero.tech@gmail.com",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: locale === "ar" ? "الأبيض" : "El Obeid",
+      addressCountry: "SD",
+    },
+    sameAs: Array.from(new Set(["https://github.com/MGTO21", ...socialLinks.map((l: { url: string }) => l.url).filter((u: string) => u?.startsWith("http") && !u.includes("wa.me"))])),
+    founder: {
       "@type": "Person",
-      "name": "Mohammed Moatasim",
-      "jobTitle": "Lead Software Developer"
-    }
+      name: locale === "ar" ? "محمد معتصم" : "Mohammed Moatasim",
+    },
   };
 
   return (
